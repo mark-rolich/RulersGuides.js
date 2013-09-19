@@ -3,6 +3,7 @@ RulersGuides.js
 
 This Javascript package creates Photoshop-like guides and rulers interface on a web page.
 Guides are created by click-and-dragging corresponding horizontal or vertical ruler.
+Guide position is shown while dragging and on mouse over.
 
 Demo is available at http://mark-rolich.github.io/RulersGuides.js/
 
