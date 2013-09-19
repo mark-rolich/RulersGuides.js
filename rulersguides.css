@@ -4,23 +4,43 @@ html, body {
 }
 
 .guide {
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 9999;
-	font-size: 0
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    font-size: 0
 }
 
 .guide.v {
-	width: 1px;
-	border-right: solid 1px blue;
-	cursor: col-resize
+    width: 1px;
+    border-right: solid 1px blue;
+    cursor: col-resize
 }
 
 .guide.h {
-	height: 1px;
-	border-bottom: solid 1px blue;
-	cursor: row-resize
+    height: 1px;
+    border-bottom: solid 1px blue;
+    cursor: row-resize
+}
+
+.info {
+    width: 50px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    position: relative;
+    font-size: 13px;
+    background-color: #eee;
+    border: solid 1px #ccc;
+    color: #000
+}
+
+.guide.v .info {
+    left: 2px;
+}
+
+.guide.h .info {
+    top: 2px;
 }
 
 .ruler {
@@ -29,11 +49,11 @@ html, body {
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
-	background-color: #ccc;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 9998;
+    background-color: #ccc;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9998;
 }
 
 .ruler .label {
@@ -42,106 +62,106 @@ html, body {
 }
 
 .ruler, .ruler span {
-	font-size: 0
+    font-size: 0
 }
 
 .ruler.h {
     left: -1px;
-	padding-top: 14px;
-	border-bottom: solid 1px #000
+    padding-top: 14px;
+    border-bottom: solid 1px #000
 }
 
 .ruler.v {
     top: -1px;
-	padding-left: 16px;
-	width: 25px;
-	border-right: solid 1px #000
+    padding-left: 16px;
+    width: 25px;
+    border-right: solid 1px #000
 }
 
 .ruler.h span {
-	border-left: solid 1px #999;
-	height: 9px;
-	width: 1px;
-	vertical-align: bottom;
-	display: inline-block;
-	*display: inline;
-	zoom: 1
+    border-left: solid 1px #999;
+    height: 9px;
+    width: 1px;
+    vertical-align: bottom;
+    display: inline-block;
+    *display: inline;
+    zoom: 1
 }
 
 .ruler.v span {
-	display: block;
-	margin-left: auto;
-	margin-right: 0;
-	border-top: solid 1px #999;
-	width: 9px;
-	height: 1px
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+    border-top: solid 1px #999;
+    width: 9px;
+    height: 1px
 }
 
 .ruler.v span.major {
-	border-top: solid 1px #000;
-	width: 13px
+    border-top: solid 1px #000;
+    width: 13px
 }
 
 .ruler.v span.milestone {
-	position: relative;
-	border-top: solid 1px #000;
-	width: 17px
+    position: relative;
+    border-top: solid 1px #000;
+    width: 17px
 }
 
 .ruler.v span.label {
-    border: none;
+    border: 0;
     font-size: 9px;
     position: absolute;
     text-align: center;
-	width: 9px
+    width: 9px
 }
 
 .ruler.h span.major {
-	border-left: solid 1px #000;
-	height: 13px
+    border-left: solid 1px #000;
+    height: 13px
 }
 
 .ruler.h span.milestone {
-	position: relative;
-	border-left: solid 1px #000;
-	height: 17px
+    position: relative;
+    border-left: solid 1px #000;
+    height: 17px
 }
 
 .ruler.h span.label {
-    border: none;
+    border: 0;
     font-size: 9px;
     position: absolute;
     text-align: center;
     top: -14px;
-	width: 9px
+    width: 9px
 }
 
 .ruler.h .l10 {
-	left: -5px
+    left: -5px
 }
 
 .ruler.h .l100 {
-	left: -7px
+    left: -7px
 }
 
 .ruler.h .l1000 {
-	left: -10px
+    left: -10px
 }
 
 .ruler.v .l10,
 .ruler.v .l100,
 .ruler.v .l1000 {
-	top: -7px
+    top: -7px
 }
 
 .ruler.v .l10 {
-    left: -10px
+    left: -12px
 }
 
 .ruler.v .l100 {
-    left: -15px
+    left: -17px
 }
 
 .ruler.v .l1000 {
-	left: -20px
+    left: -23px
 }
