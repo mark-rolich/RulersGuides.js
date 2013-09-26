@@ -6,6 +6,7 @@
 * Toggle rulers - Ctrl+Alt+R
 * Toggle guides - Ctrl+Alt+G
 * Toggle rulers and guides - Ctrl+Alt+A
+* Clear all guides - Ctrl+Alt+D
 *
 * Look-and-feel can be adjusted using CSS.
 *
@@ -156,6 +157,19 @@ var RulersGuides = function (evt, dragdrop) {
 
             hRuler      = body.appendChild(new Ruler('h', gWidth));
             vRuler      = body.appendChild(new Ruler('v', gHeight));
+        },
+        deleteGuides = function () {
+            var i;
+
+            if (guidesCnt > 0) {
+                for (i in guides) {
+                    if (guides.hasOwnProperty(i)) {
+                        document.body.removeChild(guides[i]);
+                        delete guides[i];
+                        guidesCnt = guidesCnt - 1;
+                    }
+                }
+            }
         };
 
     prepare();
@@ -163,15 +177,7 @@ var RulersGuides = function (evt, dragdrop) {
     this.status = 1;
 
     this.disable = function () {
-        var i;
-
-        for (i in guides) {
-            if (guides.hasOwnProperty(i)) {
-                document.body.removeChild(guides[i]);
-                delete guides[i];
-                guidesCnt = guidesCnt - 1;
-            }
-        }
+        deleteGuides();
 
         vRuler.style.display = 'none';
         hRuler.style.display = 'none';
@@ -291,6 +297,9 @@ var RulersGuides = function (evt, dragdrop) {
                 break;
             case 71:
                 toggleGuides();
+                break;
+            case 68:
+                deleteGuides();
                 break;
             case 65:
                 if (rulerStatus === 1 || guideStatus === 1) {
