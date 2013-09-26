@@ -1,12 +1,15 @@
 /**
 * This Javascript package creates Photoshop-like guides and rulers interface on a web page.
 * Guides are created by click-and-dragging corresponding horizontal or vertical ruler.
+* Guide positions could be saved in a local storage and opened later (on a page location basis)
 * Following hotkeys are available:
 *
 * Toggle rulers - Ctrl+Alt+R
 * Toggle guides - Ctrl+Alt+G
 * Toggle rulers and guides - Ctrl+Alt+A
 * Clear all guides - Ctrl+Alt+D
+* Save grid dialog - Ctrl+Alt+S
+* Open grid dialog - Ctrl+Alt+P
 *
 * Look-and-feel can be adjusted using CSS.
 *
@@ -99,6 +102,9 @@ var RulersGuides = function (evt, dragdrop) {
         guideStatus = 1,
         hBound      = 0,
         vBound      = 0,
+        openDialog  = null,
+        gridList    = null,
+        gridSelect  = null,
         removeInboundGuide = function (guide, gUid) {
             if (
                 rulerStatus === 1 && guideStatus === 1 && (
@@ -145,18 +151,35 @@ var RulersGuides = function (evt, dragdrop) {
                 hRuler.style.display = 'none';
             }
         },
-        cssText     = 'html,body{margin:0;padding:0}.guide{position:absolute;top:0;left:0;z-index:9999;font-size:0}.guide.v{width:1px;border-right:solid 1px #00f;cursor:col-resize}.guide.h{height:1px;border-bottom:solid 1px #00f;cursor:row-resize}.info{width:50px;height:25px;line-height:25px;text-align:center;position:relative;font-size:13px;background-color:#eee;border:solid 1px #ccc;color:#000}.guide.v .info{left:2px}.guide.h .info{top:2px}.ruler{-moz-user-select:-moz-none;-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;background-color:#ccc;position:absolute;top:0;left:0;z-index:9998}.ruler .label{font:12px Arial;color:#000}.ruler,.ruler span{font-size:0}.ruler.h{left:-1px;padding-top:14px;border-bottom:solid 1px #000}.ruler.v{top:-1px;padding-left:16px;width:25px;border-right:solid 1px #000}.ruler.h span{border-left:solid 1px #999;height:9px;width:1px;vertical-align:bottom;display:inline-block;*display:inline;zoom:1}.ruler.v span{display:block;margin-left:auto;margin-right:0;border-top:solid 1px #999;width:9px;height:1px}.ruler.v span.major{border-top:solid 1px #000;width:13px}.ruler.v span.milestone{position:relative;border-top:solid 1px #000;width:17px}.ruler.v span.label{border:0;font-size:9px;position:absolute;text-align:center;width:9px}.ruler.h span.major{border-left:solid 1px #000;height:13px}.ruler.h span.milestone{position:relative;border-left:solid 1px #000;height:17px}.ruler.h span.label{border:0;font-size:9px;position:absolute;text-align:center;top:-14px;width:9px}.ruler.h .l10{left:-5px}.ruler.h .l100{left:-7px}.ruler.h .l1000{left:-10px}.ruler.v .l10,.ruler.v .l100,.ruler.v .l1000{top:-7px}.ruler.v .l10{left:-12px}.ruler.v .l100{left:-17px}.ruler.v .l1000{left:-23px}',
-        prepare     = function () {
-            var style = document.createElement('style');
+        cssText     = 'html,body{margin:0;padding:0}.guide{position:absolute;top:0;left:0;z-index:9991;font-size:0}.guide.v{width:1px;border-right:solid 1px #00f;cursor:col-resize}.guide.h{height:1px;border-bottom:solid 1px #00f;cursor:row-resize}.info{width:50px;height:25px;line-height:25px;text-align:center;position:relative;font-size:13px;background-color:#eee;border:solid 1px #ccc;color:#000}.guide.v .info{left:2px}.guide.h .info{top:2px}.ruler{-moz-user-select:-moz-none;-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;background-color:#ccc;position:absolute;top:0;left:0;z-index:9990}.ruler .label{font:12px Arial;color:#000}.ruler,.ruler span{font-size:0}.ruler.h{left:-1px;padding-top:14px;border-bottom:solid 1px #000}.ruler.v{top:-1px;padding-left:16px;width:25px;border-right:solid 1px #000}.ruler.h span{border-left:solid 1px #999;height:9px;width:1px;vertical-align:bottom;display:inline-block;*display:inline;zoom:1}.ruler.v span{display:block;margin-left:auto;margin-right:0;border-top:solid 1px #999;width:9px;height:1px}.ruler.v span.major{border-top:solid 1px #000;width:13px}.ruler.v span.milestone{position:relative;border-top:solid 1px #000;width:17px}.ruler.v span.label{border:0;font-size:9px;position:absolute;text-align:center;width:9px}.ruler.h span.major{border-left:solid 1px #000;height:13px}.ruler.h span.milestone{position:relative;border-left:solid 1px #000;height:17px}.ruler.h span.label{border:0;font-size:9px;position:absolute;text-align:center;top:-14px;width:9px}.ruler.h .l10{left:-5px}.ruler.h .l100{left:-7px}.ruler.h .l1000{left:-10px}.ruler.v .l10,.ruler.v .l100,.ruler.v .l1000{top:-7px}.ruler.v .l10{left:-12px}.ruler.v .l100{left:-17px}.ruler.v .l1000{left:-23px}.open-dialog{position:absolute;background-color:#ccc;z-index:9992;padding:10px}.open-dialog select,.open-dialog button{float:left;display:block;font-size:20px;line-height:20px}.open-dialog .ok-btn,.open-dialog .cancel-btn {margin-top:10px}.open-dialog .ok-btn{clear:both}',
+        removeGrid = function (gridName) {
+            if (gridList[gridName] !== undefined) {
+                delete gridList[gridName];
+                window.localStorage.setItem('RulersGuides', JSON.stringify(gridList));
+            }
+        },
+        renderGridSelect = function () {
+            var gridName,
+                options = '';
 
-            style.innerHTML = cssText;
-            document.body.appendChild(style);
+            if (window.localStorage) {
+                gridList = JSON.parse(window.localStorage.getItem('RulersGuides'));
+            }
 
-            gWidth = document.documentElement.clientWidth;
-            gHeight = Math.max(body.scrollHeight, body.offsetHeight, doc.clientHeight, doc.scrollHeight, doc.offsetHeight);
+            if (gridSelect === null) {
+                gridSelect = document.createElement('select');
+                gridSelect.id = 'grid-list';
+            }
 
-            hRuler      = body.appendChild(new Ruler('h', gWidth));
-            vRuler      = body.appendChild(new Ruler('v', gHeight));
+            if (gridList !== null) {
+                for (gridName in gridList) {
+                    if (gridList.hasOwnProperty(gridName)) {
+                        options += '<option>' + gridName + '</option>';
+                    }
+                }
+
+                gridSelect.innerHTML = options;
+            }
         },
         deleteGuides = function () {
             var i;
@@ -168,6 +191,151 @@ var RulersGuides = function (evt, dragdrop) {
                         delete guides[i];
                         guidesCnt = guidesCnt - 1;
                     }
+                }
+            }
+        },
+        renderGrid = function (gridName) {
+            if (gridList[gridName] !== undefined) {
+                var grid        = gridList[gridName],
+                    guideId     = null,
+                    guideElem   = null;
+
+                deleteGuides();
+
+                for (guideId in grid) {
+                    if (grid.hasOwnProperty(guideId)) {
+                        guideElem = document.createElement('div');
+                        guideElem.id = guideId;
+                        guideElem.className = grid[guideId].cssClass;
+                        guideElem.style.cssText = grid[guideId].style;
+
+                        document.body.appendChild(guideElem);
+
+                        guides[guideId] = guideElem;
+
+                        guidesCnt = guidesCnt + 1;
+                    }
+                }
+            }
+        },
+        renderOpenDialog = function (autoOpen) {
+            var OkBtn = null,
+                CancelBtn = null,
+                DeleteBtn = null,
+                gridListLen = 0,
+                i;
+
+            renderGridSelect();
+
+            if (openDialog === null) {
+                OkBtn = document.createElement('button');
+                CancelBtn = OkBtn.cloneNode(false);
+                DeleteBtn = OkBtn.cloneNode(false);
+
+                OkBtn.className = 'ok-btn';
+                CancelBtn.className = 'cancel-btn';
+                DeleteBtn.className = 'del-btn';
+
+                openDialog = document.createElement('div');
+
+                openDialog.className = 'open-dialog';
+                openDialog.id = 'open-dialog';
+
+                DeleteBtn.appendChild(document.createTextNode('Delete'));
+                OkBtn.appendChild(document.createTextNode('Open'));
+                CancelBtn.appendChild(document.createTextNode('Cancel'));
+
+                openDialog.appendChild(gridSelect);
+                openDialog.appendChild(DeleteBtn);
+                openDialog.appendChild(OkBtn);
+                openDialog.appendChild(CancelBtn);
+
+                document.body.appendChild(openDialog);
+
+                openDialog.style.left = ((doc.clientWidth - openDialog.clientWidth) / 2) + 'px';
+                openDialog.style.top = ((doc.clientHeight - openDialog.clientHeight) / 2) + 'px';
+
+                evt.attach('click', DeleteBtn, function (e, src) {
+                    if (window.confirm('Are you sure ?')) {
+                        if (gridSelect.options.length > 0) {
+                            removeGrid(gridSelect.options[gridSelect.selectedIndex].value);
+
+                            gridSelect.removeChild(
+                                gridSelect.options[gridSelect.selectedIndex]
+                            );
+                        }
+
+                        if (gridSelect.options.length === 0) {
+                            src.parentNode.style.display = 'none';
+                        }
+                    }
+                });
+
+                evt.attach('click', OkBtn, function (e, src) {
+                    renderGrid(gridSelect.value);
+                    src.parentNode.style.display = 'none';
+                });
+
+                evt.attach('click', CancelBtn, function (e, src) {
+                    src.parentNode.style.display = 'none';
+                });
+            } else {
+                openDialog.replaceChild(gridSelect, document.getElementById('grid-list'));
+            }
+
+            for (i in gridList) {
+                if (gridList.hasOwnProperty(i)) {
+                    gridListLen = gridListLen + 1;
+                }
+            }
+
+            openDialog.style.display = (
+                autoOpen !== undefined
+                && autoOpen === true
+                && gridListLen > 0
+            )
+                ? 'block'
+                : 'none';
+        },
+        prepare     = function () {
+            var style = document.createElement('style');
+
+            style.innerHTML = cssText;
+            document.body.appendChild(style);
+
+            gWidth = document.documentElement.clientWidth;
+            gHeight = Math.max(body.scrollHeight, body.offsetHeight, doc.clientHeight, doc.scrollHeight, doc.offsetHeight);
+
+            hRuler      = body.appendChild(new Ruler('h', gWidth));
+            vRuler      = body.appendChild(new Ruler('v', gHeight));
+
+            renderOpenDialog();
+        },
+        saveGrid = function () {
+            var data = {},
+                gridData = {},
+                i,
+                gridName = '';
+
+            while (gridName === '' && guidesCnt > 0) {
+                gridName = window.prompt('Save grid as');
+
+                if (gridName !== '' && gridName !== false && gridName !== null && window.localStorage) {
+                    for (i in guides) {
+                        if (guides.hasOwnProperty(i)) {
+                            gridData[i] = {
+                                'cssClass' : guides[i].className,
+                                'style' : guides[i].style.cssText
+                            };
+                        }
+                    }
+
+                    if (window.localStorage.getItem('RulersGuides') !== null) {
+                        data = JSON.parse(window.localStorage.getItem('RulersGuides'));
+                    }
+
+                    data[gridName] = gridData;
+                    window.localStorage.setItem('RulersGuides', JSON.stringify(data));
                 }
             }
         };
@@ -292,8 +460,14 @@ var RulersGuides = function (evt, dragdrop) {
     evt.attach('keyup', document, function (e) {
         if (e.ctrlKey === true && e.altKey === true) {
             switch (e.keyCode) {
+            case 83:
+                saveGrid();
+                break;
             case 82:
                 toggleRulers();
+                break;
+            case 79:
+                renderOpenDialog(true);
                 break;
             case 71:
                 toggleGuides();

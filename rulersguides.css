@@ -1,4 +1,4 @@
-html, body {
+html,body {
     margin: 0;
     padding: 0
 }
@@ -7,19 +7,19 @@ html, body {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 9999;
+    z-index: 9991;
     font-size: 0
 }
 
 .guide.v {
     width: 1px;
-    border-right: solid 1px blue;
+    border-right: solid 1px #00f;
     cursor: col-resize
 }
 
 .guide.h {
     height: 1px;
-    border-bottom: solid 1px blue;
+    border-bottom: solid 1px #00f;
     cursor: row-resize
 }
 
@@ -36,11 +36,11 @@ html, body {
 }
 
 .guide.v .info {
-    left: 2px;
+    left: 2px
 }
 
 .guide.h .info {
-    top: 2px;
+    top: 2px
 }
 
 .ruler {
@@ -53,7 +53,7 @@ html, body {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 9998;
+    z-index: 9990
 }
 
 .ruler .label {
@@ -61,7 +61,7 @@ html, body {
     color: #000
 }
 
-.ruler, .ruler span {
+.ruler,.ruler span {
     font-size: 0
 }
 
@@ -148,9 +148,7 @@ html, body {
     left: -10px
 }
 
-.ruler.v .l10,
-.ruler.v .l100,
-.ruler.v .l1000 {
+.ruler.v .l10,.ruler.v .l100,.ruler.v .l1000 {
     top: -7px
 }
 
@@ -164,4 +162,26 @@ html, body {
 
 .ruler.v .l1000 {
     left: -23px
+}
+
+.open-dialog {
+    position: absolute;
+    background-color: #ccc;
+    z-index: 9992;
+    padding: 10px
+}
+
+.open-dialog select,.open-dialog button {
+    float: left;
+    display: block;
+    font-size: 20px;
+    line-height: 20px
+}
+
+.open-dialog .ok-btn,.open-dialog .cancel-btn {
+    margin-top: 10px
+}
+
+.open-dialog .ok-btn {
+    clear: both
 }

@@ -1,5 +1,5 @@
 body.demo {
-    padding-top: 100px;
+    padding-top: 50px;
     font: 25px Arial
 }
 
@@ -16,9 +16,12 @@ em {
 }
 
 ul {
-    margin: 0 0 0 25px;
+    font-size: 20px;
+    float: left;
+    display: block;
+    margin: 0 0 25px 25px;
     padding: 0;
-    list-style: none
+    list-style: none;
 }
 
 ul li {
@@ -26,15 +29,27 @@ ul li {
 }
 
 ul span {
+    display: inline-block
+}
+
+ul.list1 span {
+    width: 250px
+}
+
+ul.list2 {
+    margin-left: 100px
+}
+
+ul.list2 span {
     display: inline-block;
-    width: 300px
+    width: 150px
 }
 
 kbd {
     display: inline-block;
     border: solid 1px #ccc;
     padding: 0;
-    font: 30px Arial;
+    font: 20px Arial;
     padding: 3px 7px;
     background-color: #eee;
     border-radius: 5px;
