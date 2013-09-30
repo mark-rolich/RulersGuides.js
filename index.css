@@ -1,6 +1,6 @@
 body.demo {
-    padding-top: 50px;
-    font: 25px Arial
+    padding-top: 45px;
+    font: 21px Arial
 }
 
 .main-wrapper {
@@ -21,7 +21,7 @@ ul {
     display: block;
     margin: 0 0 25px 25px;
     padding: 0;
-    list-style: none;
+    list-style: none
 }
 
 ul li {

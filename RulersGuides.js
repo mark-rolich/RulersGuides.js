@@ -10,6 +10,7 @@
 * Clear all guides - Ctrl+Alt+D
 * Save grid dialog - Ctrl+Alt+S
 * Open grid dialog - Ctrl+Alt+P
+* Lock/unlock rulers - Ctrl+Alt+L
 *
 * Look-and-feel can be adjusted using CSS.
 *
@@ -35,11 +36,14 @@ var RulersGuides = function (evt, dragdrop) {
 
     var doc         = document.documentElement,
         body        = document.body,
-        gWidth      = 0,
-        gHeight     = 0,
+        wrapper     = null,
+        lockHandler = null,
+        locked      = 1,
+        hRuler      = null,
+        vRuler      = null,
         Ruler       = function (type, size) {
-            var i           = 0,
-                ruler       = document.createElement('div'),
+            var ruler       = document.createElement('div'),
+                i           = 0,
                 span        = document.createElement('span'),
                 label       = null,
                 labelTxt    = null,
@@ -47,12 +51,6 @@ var RulersGuides = function (evt, dragdrop) {
                 cnt         = Math.floor(size / 2);
 
             ruler.className = 'ruler ' + type;
-
-            if (type === 'h') {
-                ruler.style.width = size + 'px';
-            } else {
-                ruler.style.height = size + 'px';
-            }
 
             for (i; i < cnt; i = i + 1) {
                 span = span.cloneNode(false);
@@ -92,8 +90,6 @@ var RulersGuides = function (evt, dragdrop) {
 
             return ruler;
         },
-        hRuler      = null,
-        vRuler      = null,
         mode        = 2,
         guides      = {},
         guidesCnt   = 0,
@@ -105,14 +101,46 @@ var RulersGuides = function (evt, dragdrop) {
         openDialog  = null,
         gridList    = null,
         gridSelect  = null,
+        getWindowSize = function () {
+            var w = Math.max(
+                    body.scrollWidth,
+                    body.offsetWidth,
+                    doc.clientWidth,
+                    doc.scrollWidth,
+                    doc.offsetWidth
+                ),
+                h = Math.max(
+                    body.scrollHeight,
+                    body.offsetHeight,
+                    doc.clientHeight,
+                    doc.scrollHeight,
+                    doc.offsetHeight
+                );
+
+            return [w, h];
+        },
+        getScrollPos = function () {
+            var t = Math.max(doc.scrollTop, body.scrollTop),
+                l = Math.max(doc.scrollLeft, body.scrollLeft);
+
+            return [t, l];
+        },
+        getScrollSize = function () {
+            var w = Math.max(doc.scrollWidth, body.scrollWidth),
+                h = Math.max(doc.scrollHeight, body.scrollHeight);
+
+            return [w, h];
+        },
         removeInboundGuide = function (guide, gUid) {
+            var scrollPos = getScrollPos();
+
             if (
                 rulerStatus === 1 && guideStatus === 1 && (
-                    (guide.className === 'guide h draggable' && guide.offsetTop < hBound) ||
-                    (guide.className === 'guide v draggable' && guide.offsetLeft < vBound)
+                    (guide.className === 'guide h draggable' && guide.offsetTop < hBound + scrollPos[0]) ||
+                    (guide.className === 'guide v draggable' && guide.offsetLeft < vBound + scrollPos[1])
                 )
             ) {
-                document.body.removeChild(guide);
+                wrapper.removeChild(guide);
                 delete guides[gUid];
                 guidesCnt = guidesCnt - 1;
             }
@@ -151,7 +179,7 @@ var RulersGuides = function (evt, dragdrop) {
                 hRuler.style.display = 'none';
             }
         },
-        cssText     = 'html,body{margin:0;padding:0}.guide{position:absolute;top:0;left:0;z-index:9991;font-size:0}.guide.v{width:1px;border-right:solid 1px #00f;cursor:col-resize}.guide.h{height:1px;border-bottom:solid 1px #00f;cursor:row-resize}.info{width:50px;height:25px;line-height:25px;text-align:center;position:relative;font-size:13px;background-color:#eee;border:solid 1px #ccc;color:#000}.guide.v .info{left:2px}.guide.h .info{top:2px}.ruler{-moz-user-select:-moz-none;-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;background-color:#ccc;position:absolute;top:0;left:0;z-index:9990}.ruler .label{font:12px Arial;color:#000}.ruler,.ruler span{font-size:0}.ruler.h{left:-1px;padding-top:14px;border-bottom:solid 1px #000}.ruler.v{top:-1px;padding-left:16px;width:25px;border-right:solid 1px #000}.ruler.h span{border-left:solid 1px #999;height:9px;width:1px;vertical-align:bottom;display:inline-block;*display:inline;zoom:1}.ruler.v span{display:block;margin-left:auto;margin-right:0;border-top:solid 1px #999;width:9px;height:1px}.ruler.v span.major{border-top:solid 1px #000;width:13px}.ruler.v span.milestone{position:relative;border-top:solid 1px #000;width:17px}.ruler.v span.label{border:0;font-size:9px;position:absolute;text-align:center;width:9px}.ruler.h span.major{border-left:solid 1px #000;height:13px}.ruler.h span.milestone{position:relative;border-left:solid 1px #000;height:17px}.ruler.h span.label{border:0;font-size:9px;position:absolute;text-align:center;top:-14px;width:9px}.ruler.h .l10{left:-5px}.ruler.h .l100{left:-7px}.ruler.h .l1000{left:-10px}.ruler.v .l10,.ruler.v .l100,.ruler.v .l1000{top:-7px}.ruler.v .l10{left:-12px}.ruler.v .l100{left:-17px}.ruler.v .l1000{left:-23px}.open-dialog{position:absolute;background-color:#ccc;z-index:9992;padding:10px}.open-dialog select,.open-dialog button{float:left;display:block;font-size:20px;line-height:20px}.open-dialog .ok-btn,.open-dialog .cancel-btn {margin-top:10px}.open-dialog .ok-btn{clear:both}',
+        cssText     = 'html,body{margin:0;padding:0}.rg-overlay{position:absolute;top:0;left:0;overflow:hidden}.guide{position:absolute;top:0;left:0;z-index:9991;font-size:0}.guide.v{width:1px;height:7000px;border-right:solid 1px #00f;cursor:col-resize}.guide.h{width:3000px;height:1px;border-bottom:solid 1px #00f;cursor:row-resize}.info{width:50px;height:25px;line-height:25px;text-align:center;position:relative;font-size:13px;background-color:#eee;border:solid 1px #ccc;color:#000}.guide.v .info{left:2px}.guide.h .info{top:2px}.ruler{-moz-user-select:-moz-none;-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;background-color:#ccc;position:absolute;top:0;left:0;z-index:9990}.ruler .label{font:12px Arial;color:#000}.ruler,.ruler span{font-size:0}.ruler.h{width:3000px;left:-1px;padding-top:14px;border-bottom:solid 1px #000}.ruler.v{height:7000px;top:-1px;padding-left:16px;width:25px;border-right:solid 1px #000}.ruler.h span{border-left:solid 1px #999;height:9px;width:1px;vertical-align:bottom;display:inline-block;*display:inline;zoom:1}.ruler.v span{display:block;margin-left:auto;margin-right:0;border-top:solid 1px #999;width:9px;height:1px}.ruler.v span.major{border-top:solid 1px #000;width:13px}.ruler.v span.milestone{position:relative;border-top:solid 1px #000;width:17px}.ruler.v span.label{border:0;font-size:9px;position:absolute;text-align:center;width:9px}.ruler.h span.major{border-left:solid 1px #000;height:13px}.ruler.h span.milestone{position:relative;border-left:solid 1px #000;height:17px}.ruler.h span.label{border:0;font-size:9px;position:absolute;text-align:center;top:-14px;width:9px}.ruler.h .l10{left:-5px}.ruler.h .l100{left:-7px}.ruler.h .l1000{left:-10px}.ruler.v .l10,.ruler.v .l100,.ruler.v .l1000{top:-7px}.ruler.v .l10{left:-12px}.ruler.v .l100{left:-17px}.ruler.v .l1000{left:-23px}.open-dialog{position:absolute;background-color:#ccc;z-index:9992;padding:10px}.open-dialog select,.open-dialog button{float:left;display:block;font-size:20px;line-height:20px}.open-dialog .ok-btn,.open-dialog .cancel-btn {margin-top:10px}.open-dialog .ok-btn{clear:both}',
         removeGrid = function (gridName) {
             if (gridList[gridName] !== undefined) {
                 delete gridList[gridName];
@@ -187,7 +215,7 @@ var RulersGuides = function (evt, dragdrop) {
             if (guidesCnt > 0) {
                 for (i in guides) {
                     if (guides.hasOwnProperty(i)) {
-                        document.body.removeChild(guides[i]);
+                        wrapper.removeChild(guides[i]);
                         delete guides[i];
                         guidesCnt = guidesCnt - 1;
                     }
@@ -209,7 +237,7 @@ var RulersGuides = function (evt, dragdrop) {
                         guideElem.className = grid[guideId].cssClass;
                         guideElem.style.cssText = grid[guideId].style;
 
-                        document.body.appendChild(guideElem);
+                        wrapper.appendChild(guideElem);
 
                         guides[guideId] = guideElem;
 
@@ -250,7 +278,7 @@ var RulersGuides = function (evt, dragdrop) {
                 openDialog.appendChild(OkBtn);
                 openDialog.appendChild(CancelBtn);
 
-                document.body.appendChild(openDialog);
+                body.appendChild(openDialog);
 
                 openDialog.style.left = ((doc.clientWidth - openDialog.clientWidth) / 2) + 'px';
                 openDialog.style.top = ((doc.clientHeight - openDialog.clientHeight) / 2) + 'px';
@@ -298,16 +326,25 @@ var RulersGuides = function (evt, dragdrop) {
                 : 'none';
         },
         prepare     = function () {
-            var style = document.createElement('style');
+            var style = document.createElement('style'),
+                size = getWindowSize();
 
             style.innerHTML = cssText;
-            document.body.appendChild(style);
+            body.appendChild(style);
 
-            gWidth = document.documentElement.clientWidth;
-            gHeight = Math.max(body.scrollHeight, body.offsetHeight, doc.clientHeight, doc.scrollHeight, doc.offsetHeight);
+            hRuler = new Ruler('h', 3000);
+            vRuler = new Ruler('v', 7000);
 
-            hRuler      = body.appendChild(new Ruler('h', gWidth));
-            vRuler      = body.appendChild(new Ruler('v', gHeight));
+            wrapper = document.createElement('div');
+
+            wrapper.className = 'rg-overlay';
+            wrapper.style.width = (size[0]) + 'px';
+            wrapper.style.height = (size[1]) + 'px';
+
+            wrapper.appendChild(hRuler);
+            wrapper.appendChild(vRuler);
+
+            body.appendChild(wrapper);
 
             renderOpenDialog();
         },
@@ -338,6 +375,26 @@ var RulersGuides = function (evt, dragdrop) {
                     window.localStorage.setItem('RulersGuides', JSON.stringify(data));
                 }
             }
+        },
+        toggleRulersLock = function () {
+            if (locked === 0) {
+                if (lockHandler !== null) {
+                    evt.detach('scroll', window, lockHandler);
+                }
+            } else {
+                lockHandler = evt.attach('scroll', window, function () {
+                    var pos = getScrollPos(),
+                        size = getScrollSize();
+
+                    hRuler.style.top = pos[0] + 'px';
+                    wrapper.style.height = size[1] + 'px';
+
+                    vRuler.style.left = pos[1] + 'px';
+                    wrapper.style.width = size[0] + 'px';
+                });
+            }
+
+            locked = 1 - locked;
         };
 
     prepare();
@@ -363,6 +420,13 @@ var RulersGuides = function (evt, dragdrop) {
     };
 
     evt.attach('mousedown', document, function (e) {
+        var x               = e.clientX,
+            y               = e.clientY,
+            guide           = null,
+            guideInfo       = null,
+            guideInfoText   = null,
+            scrollPos       = getScrollPos();
+
         if (vBound === 0) {
             vBound = vRuler.offsetWidth;
             hBound = hRuler.offsetHeight;
@@ -370,13 +434,13 @@ var RulersGuides = function (evt, dragdrop) {
 
         if (
             (
-                (e.clientX > vBound && e.clientY < hBound) ||
-                (e.clientY > hBound && e.clientX < vBound)
+                (x > vBound && y < hBound) ||
+                (y > hBound && x < vBound)
             ) && rulerStatus === 1
         ) {
-            var guide = document.createElement('div'),
-                guideInfo = guide.cloneNode(false),
-                guideInfoText = document.createTextNode('');
+            guide = document.createElement('div');
+            guideInfo = guide.cloneNode(false);
+            guideInfoText = document.createTextNode('');
 
             gUid = 'guide-' + guidesCnt;
 
@@ -385,18 +449,16 @@ var RulersGuides = function (evt, dragdrop) {
             guideInfo.appendChild(guideInfoText);
             guide.appendChild(guideInfo);
 
-            if (e.clientX > vBound && e.clientY < hBound) {
+            if (x > vBound && y < hBound) {
                 guide.className = 'guide h draggable';
-                guide.style.top = e.clientY + 'px';
-                guide.style.width = gWidth + 'px';
-                guideInfo.style.left = (e.clientX + 10) + 'px';
+                guide.style.top = (e.clientY + scrollPos[0]) + 'px';
+                guideInfo.style.left = (x + scrollPos[1] + 10) + 'px';
 
                 mode = 2;
-            } else if (e.clientY > hBound && e.clientX < vBound) {
+            } else if (y > hBound && x < vBound) {
                 guide.className = 'guide v draggable';
-                guide.style.left = e.clientX + 'px';
-                guide.style.height = gHeight + 'px';
-                guideInfo.style.top = (e.clientY - 35) + 'px';
+                guide.style.left = (x + scrollPos[1]) + 'px';
+                guideInfo.style.top = ((y + scrollPos[0]) - 35) + 'px';
 
                 mode = 1;
             }
@@ -407,7 +469,7 @@ var RulersGuides = function (evt, dragdrop) {
 
             guides[gUid] = guide;
 
-            document.body.appendChild(guide);
+            wrapper.appendChild(guide);
 
             dragdrop.set(guide, {
                 mode: mode,
@@ -433,9 +495,9 @@ var RulersGuides = function (evt, dragdrop) {
                 onstop: function (elem) {
                     elem.over = evt.attach('mouseover', elem, function (e, src) {
                         if (src.className === 'guide v draggable') {
-                            elem.info.style.top = (e.clientY - 35) + 'px';
+                            elem.info.style.top = ((e.clientY + scrollPos[0]) - 35) + 'px';
                         } else if (src.className === 'guide h draggable') {
-                            elem.info.style.left = (e.clientX + 10) + 'px';
+                            elem.info.style.left = (e.clientX + scrollPos[1] + 10) + 'px';
                         }
 
                         elem.info.style.display = 'block';
@@ -469,6 +531,9 @@ var RulersGuides = function (evt, dragdrop) {
             case 79:
                 renderOpenDialog(true);
                 break;
+            case 76:
+                toggleRulersLock();
+                break;
             case 71:
                 toggleGuides();
                 break;
@@ -484,8 +549,16 @@ var RulersGuides = function (evt, dragdrop) {
 
                 toggleRulers();
                 toggleGuides();
+
                 break;
             }
         }
+    });
+
+    evt.attach('resize', window, function () {
+        var size = getWindowSize();
+
+        wrapper.style.width = size[0] + 'px';
+        wrapper.style.height = size[1] + 'px';
     });
 };
