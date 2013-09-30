@@ -3,6 +3,13 @@ html,body {
     padding: 0
 }
 
+.rg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden
+}
+
 .guide {
     position: absolute;
     top: 0;
@@ -13,11 +20,13 @@ html,body {
 
 .guide.v {
     width: 1px;
+    height: 7000px;
     border-right: solid 1px #00f;
     cursor: col-resize
 }
 
 .guide.h {
+    width: 3000px;
     height: 1px;
     border-bottom: solid 1px #00f;
     cursor: row-resize
@@ -66,12 +75,14 @@ html,body {
 }
 
 .ruler.h {
+    width: 3000px;
     left: -1px;
     padding-top: 14px;
     border-bottom: solid 1px #000
 }
 
 .ruler.v {
+    height: 7000px;
     top: -1px;
     padding-left: 16px;
     width: 25px;
