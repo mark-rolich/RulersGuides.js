@@ -1,5 +1,5 @@
 body.demo {
-    padding-top: 45px;
+    padding-top: 37px;
     font: 21px Arial
 }
 
@@ -37,12 +37,12 @@ ul.list1 span {
 }
 
 ul.list2 {
-    margin-left: 100px
+    margin-left: 80px
 }
 
 ul.list2 span {
     display: inline-block;
-    width: 150px
+    width: 185px
 }
 
 kbd {
