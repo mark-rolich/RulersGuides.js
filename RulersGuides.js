@@ -522,8 +522,10 @@ var RulersGuides = function (evt, dragdrop) {
                 evt.attach('mousedown', toggles.all.obj, function () {
                     if (rulerStatus === 1 || guideStatus === 1) {
                         rulerStatus = guideStatus = 1;
+                        wrapper.style.display = 'none';
                     } else {
                         rulerStatus = guideStatus = 0;
+                        wrapper.style.display = 'block';
                     }
 
                     toggleRulers();
@@ -749,6 +751,7 @@ var RulersGuides = function (evt, dragdrop) {
 
         vRuler.style.display = 'none';
         hRuler.style.display = 'none';
+        wrapper.style.display = 'none';
 
         rulerStatus = 0;
         this.status = 0;
@@ -757,6 +760,7 @@ var RulersGuides = function (evt, dragdrop) {
     this.enable = function () {
         vRuler.style.display = 'block';
         hRuler.style.display = 'block';
+        wrapper.style.display = 'block';
 
         rulerStatus = 1;
         this.status = 1;
