@@ -12,6 +12,8 @@ It is possible to open/save created guides as grids using corresponding hotkeys
 
 Rulers can be locked, so that one of the rulers will scroll along the page and the other will be always visible.
 
+Guides can be snapped to defined number of pixels.
+
 Demo is available at http://mark-rolich.github.io/RulersGuides.js/
 
 Following hotkeys are available:
@@ -22,7 +24,8 @@ Following hotkeys are available:
 * Clear all guides - Ctrl+Alt+D
 * Save grid dialog - Ctrl+Alt+S
 * Open grid dialog - Ctrl+Alt+O
-* Locak/unlock rulers - Ctrl+Alt+L
+* Lock/unlock rulers - Ctrl+Alt+L
+* Open Snap to dialog - Ctrl+Alt+C
 
 Look-and-feel can be adjusted using CSS.
 
