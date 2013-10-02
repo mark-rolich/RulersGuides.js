@@ -3,18 +3,34 @@ RulersGuides.js
 
 This Javascript package creates Photoshop-like guides and rulers interface on a web page.
 
-Guides are created by click-and-dragging corresponding horizontal or vertical ruler.
+<a href="http://mark-rolich.github.io/RulersGuides.js/" target="_blank"><strong>DEMO</strong></a>
 
+Main window:
+
+<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/main.png" />
+
+Menu:
+
+<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/menu.png" />
+
+Guides are created by click-and-dragging corresponding horizontal or vertical ruler.
 Guide position is shown while dragging and on mouse over.
 
-It is possible to open/save created guides as grids using corresponding hotkeys
+<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/guides.png" />
+
+It is possible to open/save created guides as grids
 (Note: grids will be saved on a page location basis, so it's not possible to use the same grids in another browser window/tab).
 
-Rulers can be locked, so that one of the rulers will scroll along the page and the other will be always visible.
+<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/save_grid.png" />&nbsp;
+<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/open_grid.png" />
+
+Rulers can be unlocked, so that one of the rulers will scroll along the page and the other will be always visible.
+
+<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/unlock.png" />
 
 Guides can be snapped to defined number of pixels.
 
-Demo is available at http://mark-rolich.github.io/RulersGuides.js/
+<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/snap_to.png" />
 
 Following hotkeys are available:
 
@@ -33,13 +49,13 @@ RulersGuides.js requires Event.js and Dragdrop.js packages, which can be acquire
 
 Event.js
 
-* Github - https://github.com/mark-rolich/Event.js
-* JS Classes - http://www.jsclasses.org/package/212-JavaScript-Handle-events-in-a-browser-independent-manner.html
+* [Github](https://github.com/mark-rolich/Event.js)
+* [JS Classes](http://www.jsclasses.org/package/212-JavaScript-Handle-events-in-a-browser-independent-manner.html)
 
 Dragdrop.js
 
-* Github - https://github.com/mark-rolich/Dragdrop.js
-* JS Classes - http://www.jsclasses.org/package/215-JavaScript-Handle-drag-and-drop-events-of-page-elements.html
+* [Github](https://github.com/mark-rolich/Dragdrop.js)
+* [JS Classes](http://www.jsclasses.org/package/215-JavaScript-Handle-drag-and-drop-events-of-page-elements.html)
 
 RulersGuides.js is available as a bookmarklet, please see bookmarklet.js file
 provided with the package
