@@ -18,10 +18,10 @@ Guide position is shown while dragging and on mouse over.
 
 <img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/guides.png" />
 
-It is possible to open/save created guides as grids using corresponding hotkeys
+It is possible to open/save created guides as grids
 (Note: grids will be saved on a page location basis, so it's not possible to use the same grids in another browser window/tab).
 
-<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/save_grid.png" />
+<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/save_grid.png" />&nbsp;
 <img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/open_grid.png" />
 
 Rulers can be unlocked, so that one of the rulers will scroll along the page and the other will be always visible.

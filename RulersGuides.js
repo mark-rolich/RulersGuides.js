@@ -2,7 +2,7 @@
 * This Javascript package creates Photoshop-like guides and rulers interface on a web page.
 * Guides are created by click-and-dragging corresponding horizontal or vertical ruler.
 * Guide positions could be saved in a local storage and opened later (on a page location basis)
-* It is possible to open/save created guides as grids using corresponding hotkeys
+* It is possible to open/save created guides as grids
 * (Note: grids will be saved on a page location basis, so it's not possible to use the same grids in another browser window/tab).
 * Rulers can be unlocked, so that one of the rulers will scroll along the page and the other will be always visible.
 * Guides can be snapped to defined number of pixels.
