@@ -57,8 +57,9 @@ Dragdrop.js
 * [Github](https://github.com/mark-rolich/Dragdrop.js)
 * [JS Classes](http://www.jsclasses.org/package/215-JavaScript-Handle-drag-and-drop-events-of-page-elements.html)
 
-RulersGuides.js is available as a bookmarklet, please see bookmarklet.js file
-provided with the package
+RulersGuides.js is available as a bookmarklet, please see bookmarklet.js file provided with the package.
+For IE users there is a bookmarklet_ie.js file, which loads necessary packages externally due to IE bookmark size restriction.
+You can copy and include them locally by changing paths in the bookmarklet.
 
 Browser Compatibility
 --------------------
@@ -67,6 +68,8 @@ Currently tested in:
 
 * Chrome 24
 * Firefox 18
+* IE 7, 8 and 9 (without grid saving functionality)
+* Safari for Windows 5.1.7
 
 Bug tracker
 -----------

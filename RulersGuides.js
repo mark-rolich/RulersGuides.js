@@ -639,16 +639,16 @@ var RulersGuides = function (evt, dragdrop) {
                     dialogWrapper.className = 'wrapper';
 
                     xLabel.className = 'rg-x-label';
-                    xLabel.for = 'rg-x-snap';
+                    xLabel.setAttribute('for', 'rg-x-snap');
 
                     yLabel.className = 'rg-y-label';
-                    yLabel.for = 'rg-y-snap';
+                    yLabel.setAttribute('for', 'rg-y-snap');
 
-                    xInput.type = 'number';
+                    xInput.setAttribute('type', 'number');
                     xInput.value = '100';
                     xInput.id = 'rg-x-snap';
 
-                    yInput.type = 'number';
+                    xInput.setAttribute('type', 'number');
                     yInput.value = '100';
                     yInput.id = 'rg-y-snap';
 
@@ -718,28 +718,37 @@ var RulersGuides = function (evt, dragdrop) {
             var style = document.createElement('style'),
                 size = getWindowSize();
 
-            style.innerHTML = cssText;
+            style.setAttribute('type', 'text/css');
+
+            if (style.styleSheet) {
+                style.styleSheet.cssText = cssText;
+            } else {
+                style.appendChild(document.createTextNode(cssText));
+            }
+
             body.appendChild(style);
 
-            hRuler = new Ruler('h', 3000);
-            vRuler = new Ruler('v', 7000);
+            setTimeout(function () {
+                hRuler = new Ruler('h', 3000);
+                vRuler = new Ruler('v', 7000);
 
-            wrapper = document.createElement('div');
+                wrapper = document.createElement('div');
 
-            wrapper.className = 'rg-overlay';
-            wrapper.style.width = (size[0]) + 'px';
-            wrapper.style.height = (size[1]) + 'px';
+                wrapper.className = 'rg-overlay';
+                wrapper.style.width = (size[0]) + 'px';
+                wrapper.style.height = (size[1]) + 'px';
 
-            wrapper.appendChild(hRuler);
-            wrapper.appendChild(vRuler);
+                wrapper.appendChild(hRuler);
+                wrapper.appendChild(vRuler);
 
-            body.appendChild(wrapper);
+                body.appendChild(wrapper);
 
-            menu = new Menu();
-            snapDialog = new SnapDialog();
-            openGridDialog = new OpenGridDialog();
+                menu = new Menu();
+                snapDialog = new SnapDialog();
+                openGridDialog = new OpenGridDialog();
 
-            dialogs = [snapDialog, openGridDialog];
+                dialogs = [snapDialog, openGridDialog];
+            }, 100);
         };
 
     prepare();
