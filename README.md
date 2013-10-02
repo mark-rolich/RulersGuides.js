@@ -18,14 +18,14 @@ Demo is available at http://mark-rolich.github.io/RulersGuides.js/
 
 Following hotkeys are available:
 
-* Toggle rulers - Ctrl+Alt+R
-* Toggle guides - Ctrl+Alt+G
-* Toggle rulers and guides - Ctrl+Alt+A
-* Clear all guides - Ctrl+Alt+D
-* Save grid dialog - Ctrl+Alt+S
-* Open grid dialog - Ctrl+Alt+O
-* Lock/unlock rulers - Ctrl+Alt+L
-* Open Snap to dialog - Ctrl+Alt+C
+* Toggle rulers - `Ctrl+Alt+R`
+* Toggle guides - `Ctrl+Alt+G`
+* Toggle rulers and guides - `Ctrl+Alt+A`
+* Clear all guides - `Ctrl+Alt+D`
+* Save grid dialog - `Ctrl+Alt+S`
+* Open grid dialog - `Ctrl+Alt+O`
+* Lock/unlock rulers - `Ctrl+Alt+L`
+* Open Snap to dialog - `Ctrl+Alt+C`
 
 Look-and-feel can be adjusted using CSS.
 
