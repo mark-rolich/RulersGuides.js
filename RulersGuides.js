@@ -4,7 +4,7 @@
 * Guide positions could be saved in a local storage and opened later (on a page location basis)
 * It is possible to open/save created guides as grids using corresponding hotkeys
 * (Note: grids will be saved on a page location basis, so it's not possible to use the same grids in another browser window/tab).
-* Rulers can be locked, so that one of the rulers will scroll along the page and the other will be always visible.
+* Rulers can be unlocked, so that one of the rulers will scroll along the page and the other will be always visible.
 * Guides can be snapped to defined number of pixels.
 * Following hotkeys are available:
 *
