@@ -182,17 +182,18 @@ html,body {
     position: fixed;
     left: 3px;
     top: 2px;
+    line-height: 9px;
     z-index: 9998;
     width: 20px;
     height: 20px;
     background-color: red;
     opacity: 0.5;
-    font-size: 15px;
-    text-align: center;
+    font-size: 20px;
+    text-align: left;
     color: #fff;
     font-weight: bold;
     cursor: pointer;
-    border-radius: 5px
+    border-radius: 2px
 }
 
 .rg-menu {
