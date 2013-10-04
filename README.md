@@ -32,16 +32,23 @@ Guides can be snapped to defined number of pixels.
 
 <img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/snap_to.png" />
 
+Detailed info mode is available, which shows position and size of regions created by the guides.
+Works on guide position change too.
+
+<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/detailed_info1.png" />
+<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/detailed_info2.png" />
+
 Following hotkeys are available:
 
-* Toggle rulers - `Ctrl+Alt+R`
-* Toggle guides - `Ctrl+Alt+G`
-* Toggle rulers and guides - `Ctrl+Alt+A`
-* Clear all guides - `Ctrl+Alt+D`
-* Save grid dialog - `Ctrl+Alt+S`
-* Open grid dialog - `Ctrl+Alt+O`
-* Lock/unlock rulers - `Ctrl+Alt+L`
-* Open Snap to dialog - `Ctrl+Alt+C`
+* Toggle rulers - `Ctrl + Alt + R`
+* Toggle guides - `Ctrl + Alt + G`
+* Toggle rulers and guides - `Ctrl + Alt + A`
+* Clear all guides - `Ctrl + Alt + D`
+* Save grid dialog - `Ctrl + Alt + S`
+* Open grid dialog - `Ctrl + Alt + O`
+* Lock/unlock rulers - `Ctrl + Alt + L`
+* Open Snap to dialog - `Ctrl + Alt + C`
+* Toggle detailed info - `Ctrl + Alt + I`
 
 Look-and-feel can be adjusted using CSS.
 

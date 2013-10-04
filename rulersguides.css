@@ -313,3 +313,40 @@ html,body {
 #rg-x-snap, #rg-y-snap {
     width: 50px
 }
+
+.info-block-wrapper {
+    position: absolute;
+    z-index: 9989
+}
+
+.info-block {
+    position: absolute;
+    text-align: left
+}
+
+.info-block.even {
+    background: none;
+    background-color: rgba(0, 0, 255, 0.2);
+    -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#330000FF,endColorstr=#330000FF);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#330000FF,endColorstr=#330000FF);
+    zoom: 1
+}
+
+.info-block.odd {
+    background: none;
+    background-color: rgba(255, 0, 0, 0.2);
+    -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#33FF0000,endColorstr=#33FF0000);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#33FF0000,endColorstr=#33FF0000);
+    zoom: 1
+}
+
+.info-block-txt {
+    padding: 5px;
+    display: inline-block;
+    vertical-align: top;
+    background-color: #777;
+    color: #fff;
+    font-size: 13px;
+    *display: inline;
+    zoom: 1
+}
