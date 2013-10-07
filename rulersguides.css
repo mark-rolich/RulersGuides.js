@@ -210,6 +210,7 @@ html,body {
 }
 
 .rg-menu li {
+    text-align: left;
     border-bottom: solid 1px #999;
     padding: 0
 }

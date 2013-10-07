@@ -38,6 +38,8 @@ Works on guide position change too.
 <img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/detailed_info1.png" />
 <img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/detailed_info2.png" />
 
+Guides can be snapped to DOM elements (experimental, use with caution, can be slow or unresponsive on complex pages with lots of elements).
+
 Following hotkeys are available:
 
 * Toggle rulers - `Ctrl + Alt + R`
@@ -49,6 +51,7 @@ Following hotkeys are available:
 * Lock/unlock rulers - `Ctrl + Alt + L`
 * Open Snap to dialog - `Ctrl + Alt + C`
 * Toggle detailed info - `Ctrl + Alt + I`
+* Toggle snap to DOM - `Ctrl + Alt + E`
 
 Look-and-feel can be adjusted using CSS.
 
