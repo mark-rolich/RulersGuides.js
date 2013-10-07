@@ -1,0 +1,26 @@
+{
+    "manifest_version": 2,
+    "background": {
+        "scripts": [
+            "background.js"
+        ]
+    },
+    "name": "Rulers & Guides",
+    "description": "Create rulers and guides interface on a web page",
+    "version": "1.0",
+    "browser_action": {
+        "default_icon": "icon19.png",
+        "default_title": "Rulers & Guides"
+    },
+    "icons": {
+        "16": "icon16.png",
+        "19": "icon19.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
+    "permissions": [
+        "tabs",
+        "http://*/*",
+        "https://*/*"
+    ]
+}
