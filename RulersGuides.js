@@ -864,7 +864,7 @@ var RulersGuides = function (evt, dragdrop) {
                 openGridDialog = new OpenGridDialog();
 
                 dialogs = [snapDialog, openGridDialog];
-            }, 100);
+            }, 10);
         };
 
     prepare();
@@ -872,22 +872,26 @@ var RulersGuides = function (evt, dragdrop) {
     this.status = 1;
 
     this.disable = function () {
-        deleteGuides();
+        if (vRuler !== null) {
+            deleteGuides();
 
-        vRuler.style.display = 'none';
-        hRuler.style.display = 'none';
-        wrapper.style.display = 'none';
-        menuBtn.style.display = 'none';
+            vRuler.style.display = 'none';
+            hRuler.style.display = 'none';
+            wrapper.style.display = 'none';
+            menuBtn.style.display = 'none';
+        }
 
         rulerStatus = 0;
         this.status = 0;
     };
 
     this.enable = function () {
-        vRuler.style.display = 'block';
-        hRuler.style.display = 'block';
-        wrapper.style.display = 'block';
-        menuBtn.style.display = 'block';
+        if (vRuler !== null) {
+            vRuler.style.display = 'block';
+            hRuler.style.display = 'block';
+            wrapper.style.display = 'block';
+            menuBtn.style.display = 'block';
+        }
 
         rulerStatus = 1;
         this.status = 1;
