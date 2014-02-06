@@ -62,7 +62,7 @@ html,body {
 
 .ruler {
     background-color: #ccc;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 9990
