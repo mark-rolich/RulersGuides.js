@@ -980,8 +980,7 @@ console.log(guides);
                 wrapper.appendChild(vRuler);
                 wrapper.appendChild(gInfoBlockWrapper);
 
-                //body.appendChild(wrapper);
-                document.getElementById('test').appendChild(wrapper);
+                container.appendChild(wrapper);
 
                 domDimensions = calculateDomDimensions();
 
@@ -1062,7 +1061,6 @@ console.log(guides);
 
             if (y > hLowBound && y < hHighBound) {
                 guide.className = 'guide h draggable';
-                //guide.style.top = (e.clientY - container.offsetTop + scrollPos[0]) + 'px';
                 guide.style.top = (e.clientY - container.offsetTop) + 'px';
                 guideInfo.style.left = (x + scrollPos[1] + 10) + 'px';
                 guide.type = 'h';
@@ -1070,7 +1068,6 @@ console.log(guides);
                 mode = 2;
             } else if (x > vLowBound && x < vHighBound) {
                 guide.className = 'guide v draggable';
-                //guide.style.left = (x - container.offsetLeft + scrollPos[1]) + 'px';
                 guide.style.left = (x - container.offsetLeft) + 'px';
                 guideInfo.style.top = ((y + scrollPos[0]) - 35) + 'px';
                 guide.type = 'v';
