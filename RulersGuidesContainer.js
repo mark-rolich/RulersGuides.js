@@ -267,7 +267,7 @@ var RulersGuides = function (evt, dragdrop, container) {
         },
         deleteGuides = function () {
             var i;
-console.log(guides);
+
             if (guidesCnt > 0) {
                 for (i in guides) {
                     if (guides.hasOwnProperty(i)) {
