@@ -982,7 +982,7 @@ var RulersGuides = function (evt, dragdrop, container) {
             hBoundStop = hBoundStart + hRuler.offsetHeight;
         }
 
-        if (((x > vBoundStart && x < vBoundStop) || (y > hBoundStart && y < hBoundStop)) && rulerStatus === 1) {
+        if (((x > vBoundStop && y < hBoundStop) || (y > hBoundStop && x < vBoundStop)) && rulerStatus === 1) {
             guide = document.createElement('div');
             guideInfo = guide.cloneNode(false);
             guideInfoText = document.createTextNode('');
