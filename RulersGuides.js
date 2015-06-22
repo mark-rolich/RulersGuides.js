@@ -41,11 +41,16 @@
 *
 * @author Mark Rolich <mark.rolich@gmail.com>
 */
-var RulersGuides = function (evt, dragdrop, container) {
+var RulersGuides = function (evt, dragdrop, options) {
     'use strict';
 
+    options = (options != undefined) ? options : {
+        container:  document.body,
+        unitLabel:  'px'
+    };
+
     var doc         = document.documentElement,
-        body        = (container == undefined) ? document.body : container,
+        body        = options.container,
         wrapper     = null,
         lockHandler = null,
         locked      = 1,
@@ -72,10 +77,8 @@ var RulersGuides = function (evt, dragdrop, container) {
         menuBtn     = null,
         gInfoBlockWrapper = null,
         detailsStatus = 0,
-        domElements = [],
-        domDimensions = [],
         resizeTimer = null,
-        snapDom     = 0,
+        unitLabel   = (options.unitLabel != undefined) ? options.unitLabel : 'px',
         Ruler       = function (type, size) {
             var ruler       = document.createElement('div'),
                 i           = 0,
@@ -528,59 +531,6 @@ var RulersGuides = function (evt, dragdrop, container) {
                 gInfoBlockWrapper.style.display = 'none';
             }
         },
-        calculateDomDimensions = function () {
-            var x = [],
-                y = [],
-                dm = [],
-                i = 0,
-                len = domElements.length,
-                findDimensions = function (elem) {
-                    var t = 0,
-                        l = 0,
-                        w = elem.offsetWidth,
-                        h = elem.offsetHeight;
-
-                    while (elem) {
-                        l += (elem.offsetLeft - elem.scrollLeft + elem.clientLeft);
-                        t += (elem.offsetTop - elem.scrollTop + elem.clientTop);
-                        elem = elem.offsetParent;
-                    }
-
-                    return [l, t, l + w, t + h];
-                },
-                getUnique = function (arr) {
-                    var u = {}, a = [], idx = 0, arrLen = arr.length;
-
-                    for (idx; idx < arrLen; idx = idx + 1) {
-                        if (u.hasOwnProperty(arr[idx]) === false) {
-                            a.push(arr[idx]);
-                            u[arr[idx]] = 1;
-                        }
-                    }
-
-                    return a;
-                };
-
-            for (i; i < len; i = i + 1) {
-                dm = findDimensions(domElements[i]);
-
-                x.push(dm[0]);
-                x.push(dm[2]);
-
-                y.push(dm[1]);
-                y.push(dm[3]);
-            }
-
-            x = getUnique(x).sort(function (a, b) {
-                return a - b;
-            });
-
-            y = getUnique(y).sort(function (a, b) {
-                return a - b;
-            });
-
-            return [x, y];
-        },
         Menu = function () {
             var menuList = null,
                 status   = 0,
@@ -621,10 +571,6 @@ var RulersGuides = function (evt, dragdrop, container) {
                     'text': 'Show detailed info',
                     'hotkey': 'Ctrl + Alt + I',
                     'alias': 'details'
-                }, {
-                    'text': 'Snap to DOM',
-                    'hotkey': 'Ctrl + Alt + E',
-                    'alias': 'snapdom'
                 }],
                 i = 0;
 
@@ -721,14 +667,6 @@ var RulersGuides = function (evt, dragdrop, container) {
                     showDetailedInfo();
                 });
 
-                evt.attach('mousedown', toggles.snapdom.obj, function () {
-                    snapDom = 1 - snapDom;
-
-                    if (snapDom === 1) {
-                        domDimensions = calculateDomDimensions();
-                    }
-                });
-
                 menuList.appendChild(menuItems);
 
                 body.appendChild(menuBtn);
@@ -759,7 +697,6 @@ var RulersGuides = function (evt, dragdrop, container) {
 
                     toggles.lock.txt.nodeValue = (locked === 0) ? 'Lock rulers' : 'Unlock rulers';
                     toggles.details.txt.nodeValue = (detailsStatus === 0) ? 'Show detailed info' : 'Hide detailed info';
-                    toggles.snapdom.txt.nodeValue = (snapDom === 0) ? 'Snap to DOM' : 'Turn off snap to DOM';
                     toggles.open.obj.className = (gridListLen > 0) ? '' : 'disabled';
 
                     menuList.style.display = (status === 0) ? 'inline-block' : 'none';
@@ -899,15 +836,9 @@ var RulersGuides = function (evt, dragdrop, container) {
                 len = elements.length,
                 i = 0;
 
-            for (i; i < len; i = i + 1) {
-                domElements.push(elements[i]);
-            }
-
             setTimeout(function () {
-                var windowSize = getWindowSize();
-
-                hRuler = new Ruler('h', windowSize[0] + 10);
-                vRuler = new Ruler('v', windowSize[1] + 10);
+                hRuler = new Ruler('h', size[0] + 10);
+                vRuler = new Ruler('v', size[1] + 10);
 
                 wrapper = document.createElement('div');
                 gInfoBlockWrapper = wrapper.cloneNode(false);
@@ -915,16 +846,11 @@ var RulersGuides = function (evt, dragdrop, container) {
                 wrapper.className = 'rg-overlay';
                 gInfoBlockWrapper.className = 'info-block-wrapper';
 
-                wrapper.style.width = (size[0]) + 'px';
-                wrapper.style.height = (size[1]) + 'px';
-
                 wrapper.appendChild(hRuler);
                 wrapper.appendChild(vRuler);
                 wrapper.appendChild(gInfoBlockWrapper);
 
                 body.appendChild(wrapper);
-
-                domDimensions = calculateDomDimensions();
 
                 menu = new Menu();
                 snapDialog = new SnapDialog();
@@ -967,6 +893,8 @@ var RulersGuides = function (evt, dragdrop, container) {
     evt.attach('mousedown', document, function (e, src) {
         var x               = e.clientX,
             y               = e.clientY,
+            xOffset         = Math.abs(vRuler.parentElement.offsetLeft) - 2,
+            yOffset         = Math.abs(vRuler.parentElement.offsetTop) - 2,
             guide           = null,
             guideInfo       = null,
             guideInfoText   = null,
@@ -978,13 +906,15 @@ var RulersGuides = function (evt, dragdrop, container) {
         }
 
         if (vBoundStart === 0) {
-            vBoundStart = vRuler.parentElement.offsetParent.offsetLeft;
+            vBoundStart = vRuler.parentElement.offsetParent.offsetLeft + vRuler.parentElement.offsetLeft;
             vBoundStop = vBoundStart + vRuler.offsetWidth;
-            hBoundStart = hRuler.parentElement.offsetParent.offsetTop;
+            hBoundStart = hRuler.parentElement.offsetParent.offsetTop + hRuler.parentElement.offsetTop;
             hBoundStop = hBoundStart + hRuler.offsetHeight;
         }
 
-        if (((x > vBoundStop && y < hBoundStop) || (y > hBoundStop && x < vBoundStop)) && rulerStatus === 1) {
+        if (((x > vBoundStart && x < vBoundStop && y > hBoundStop) ||
+            (y > hBoundStart && y < hBoundStop && x > vBoundStop)) && rulerStatus === 1) {
+
             guide = document.createElement('div');
             guideInfo = guide.cloneNode(false);
             guideInfoText = document.createTextNode('');
@@ -998,12 +928,13 @@ var RulersGuides = function (evt, dragdrop, container) {
 
             if (x > vBoundStop && y < hBoundStop) {
                 guide.className = 'guide h draggable';
+                guide.style.top = yOffset + 'px';
                 guide.type = 'h';
                 snap = ySnap;
                 mode = 2;
             } else if (y > hBoundStop && x < vBoundStop) {
                 guide.className = 'guide v draggable';
-                guide.style.left = (x + scrollPos[1] - vBoundStart) + 'px';
+                guide.style.left = xOffset + 'px';
                 guide.type = 'v';
                 snap = xSnap;
                 mode = 1;
@@ -1022,11 +953,7 @@ var RulersGuides = function (evt, dragdrop, container) {
             dragdrop.set(guide, {
                 mode: mode,
                 onstart: function (elem) {
-                    var text = (elem.mode === 1)
-                            ? parseInt(elem.style.left, 10) + 2
-                            : parseInt(elem.style.top, 10) + 2;
-
-                    elem.text.nodeValue = text + 'px';
+                    elem.text.nodeValue = 0 + unitLabel;
 
                     if (elem.over !== undefined) {
                         evt.detach('mouseover', elem, elem.over);
@@ -1034,37 +961,31 @@ var RulersGuides = function (evt, dragdrop, container) {
                     }
                 },
                 onmove: function (elem) {
-                    var text    = '',
-                        pos     = 0,
+                    var text, pos, negativeRule,
                         dims    = [],
                         len     = 0,
                         i       = 0;
 
                     pos = (elem.mode === 1) ? elem.style.left : elem.style.top;
                     pos = parseInt(pos, 10);
+                    negativeRule = (elem.mode === 1) ? pos - xOffset < 0 : pos - yOffset < 0;
 
-                    if (snapDom === 1) {
-                        dims = domDimensions[elem.mode - 1];
+                    if (!negativeRule) {
+                        elem.style.display = 'block';
+                        text = pos = (elem.mode === 1) ? (pos - xOffset) + unitLabel : (pos - yOffset) + unitLabel;
 
-                        for (i, len = dims.length; i < len; i = i + 1) {
-                            if (pos <= dims[i]) {
-                                pos = dims[i];
-                                break;
-                            }
+                        if (elem.mode === 1) {
+                            elem.style.left = pos + 'px';
+                            elem.x = pos;
+                        } else {
+                            elem.style.top = pos + 'px';
+                            elem.y = pos;
                         }
-                    }
 
-                    text = pos + 'px';
-
-                    if (elem.mode === 1) {
-                        elem.style.left = (pos - 2) + 'px';
-                        elem.x = pos;
+                        elem.text.nodeValue = text;
                     } else {
-                        elem.style.top = (pos - 2) + 'px';
-                        elem.y = pos;
+                        elem.style.display = 'none';
                     }
-
-                    elem.text.nodeValue = text;
                 },
                 onstop: function (elem) {
                     elem.over = evt.attach('mouseover', elem, function (e, src) {
@@ -1114,13 +1035,6 @@ var RulersGuides = function (evt, dragdrop, container) {
             case 71:
                 toggleGuides();
                 break;
-            case 69:
-                snapDom = 1 - snapDom;
-
-                if (snapDom === 1) {
-                    domDimensions = calculateDomDimensions();
-                }
-                break;
             case 68:
                 deleteGuides();
                 break;
@@ -1152,12 +1066,6 @@ var RulersGuides = function (evt, dragdrop, container) {
 
         if (resizeTimer !== null) {
             window.clearTimeout(resizeTimer);
-        }
-
-        if (snapDom === 1) {
-            resizeTimer = window.setTimeout(function () {
-                domDimensions = calculateDomDimensions();
-            }, 100);
         }
     });
 };

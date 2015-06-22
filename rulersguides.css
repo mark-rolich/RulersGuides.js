@@ -5,9 +5,11 @@ html,body {
 
 .rg-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    overflow: hidden
+    top: -32px;
+    left: -42px;
+    overflow: hidden;
+    width: calc(100% + 42px);
+    height: calc(100% + 32px);
 }
 
 .guide {
@@ -67,7 +69,8 @@ html,body {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 9990
+    z-index: 9990;
+    overflow: hidden;
 }
 
 .ruler .label {
@@ -80,14 +83,14 @@ html,body {
 }
 
 .ruler.h {
-    left: -1px;
+    left: 41px;
     padding-top: 14px;
     border-bottom: solid 1px #000;
     height: 17px;
 }
 
 .ruler.v {
-    top: -1px;
+    top: 31px;
     padding-left: 16px;
     width: 25px;
     border-right: solid 1px #000
@@ -181,8 +184,8 @@ html,body {
 
 .menu-btn {
     position: relative;
-    left: 3px;
-    top: 2px;
+    left: -32px;
+    top: -27px;
     line-height: 9px;
     z-index: 9998;
     width: 20px;
@@ -199,7 +202,7 @@ html,body {
 
 .rg-menu {
     position: relative;
-    top: 22px;
+    top: -16px;
     left: 3px;
     padding: 0;
     margin: 0;
