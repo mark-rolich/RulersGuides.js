@@ -904,8 +904,10 @@ var RulersGuides = function (evt, dragdrop, container) {
             }
 
             setTimeout(function () {
-                hRuler = new Ruler('h', 3000);
-                vRuler = new Ruler('v', 7000);
+                var windowSize = getWindowSize();
+
+                hRuler = new Ruler('h', windowSize[0] + 10);
+                vRuler = new Ruler('v', windowSize[1] + 10);
 
                 wrapper = document.createElement('div');
                 gInfoBlockWrapper = wrapper.cloneNode(false);

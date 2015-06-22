@@ -80,14 +80,13 @@ html,body {
 }
 
 .ruler.h {
-    width: 3000px;
     left: -1px;
     padding-top: 14px;
-    border-bottom: solid 1px #000
+    border-bottom: solid 1px #000;
+    height: 17px;
 }
 
 .ruler.v {
-    height: 7000px;
     top: -1px;
     padding-left: 16px;
     width: 25px;
