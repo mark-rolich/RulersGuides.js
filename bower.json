@@ -1,0 +1,24 @@
+{
+  "name": "RulersGuides.js",
+  "main": "RulersGuides.js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/alanmastro/RulersGuides.js",
+  "authors": [
+    "Marco Bicchi <marco@join-italia.com>"
+  ],
+  "description": "Creates Photoshop-like guides and rulers interface on a web page",
+  "keywords": [
+    "rulers",
+    "guides",
+    "lines",
+    "photoshop"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
