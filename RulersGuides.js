@@ -42,8 +42,9 @@ var RulersGuides = function (evt, dragdrop, options) {
         container:              document.body,
         unitLabel:              'px',
         saveOpenOptionEnable:   true,
-        rulerMilestoneStep:     25,
-        rulerMajorStep:         5
+        rulerMilestoneStep:     50,
+        rulerMajorStep:         10,
+        pixelToUnitScale:       1
     };
 
     var doc                 = document.documentElement,
@@ -73,6 +74,7 @@ var RulersGuides = function (evt, dragdrop, options) {
         saveOpen            = (options.saveOpenOptionEnable !== undefined) ? options.saveOpenOptionEnable : false,
         milestoneStep       = (options.rulerMilestoneStep !== undefined) ? options.rulerMilestoneStep: 50,
         majorStep           = (options.rulerMajorStep !== undefined) ? options.rulerMajorStep: 10,
+        scaleValue          = (options.pixelToUnitScale !== undefined) ? options.pixelToUnitScale: 1,
         Ruler               = function (type, size) {
             var ruler       = document.createElement('div'),
                 i           = 0,
@@ -87,7 +89,7 @@ var RulersGuides = function (evt, dragdrop, options) {
             for (i; i < cnt; i = i + 1) {
                 span = span.cloneNode(false);
 
-                if (i % milestoneStep === 0) {
+                if (i % ((milestoneStep / 2) * scaleValue) < 1) {
                     span.className = 'milestone';
 
                     if (i > 0) {
@@ -102,13 +104,13 @@ var RulersGuides = function (evt, dragdrop, options) {
                             label.className += ' l1000';
                         }
 
-                        labelTxt = document.createTextNode(i * 2);
+                        labelTxt = document.createTextNode(parseInt((i * 2) / scaleValue));
                         label.appendChild(labelTxt);
                         span.appendChild(label);
                     }
 
                     span.className = 'milestone';
-                } else if (i % majorStep === 0) {
+                } else if (i % ((majorStep / 2) * scaleValue) < 1) {
                     span.className = 'major';
                 } else {
                     span.className = '';
@@ -679,8 +681,8 @@ var RulersGuides = function (evt, dragdrop, options) {
             var size = getWindowSize();
 
             setTimeout(function () {
-                hRuler = new Ruler('h', size[0] + 10);
-                vRuler = new Ruler('v', size[1] + 10);
+                hRuler = new Ruler('h', size[0]);
+                vRuler = new Ruler('v', size[1]);
 
                 wrapper = document.createElement('div');
                 gInfoBlockWrapper = wrapper.cloneNode(false);
@@ -790,7 +792,7 @@ var RulersGuides = function (evt, dragdrop, options) {
             dragdrop.set(guide, {
                 mode: mode,
                 onstart: function (elem) {
-                    elem.text.nodeValue = 0 + unitLabel;
+                    elem.text.nodeValue = 0 + ' ' + unitLabel;
 
                     if (elem.over !== undefined) {
                         evt.detach('mouseover', elem, elem.over);
@@ -806,7 +808,7 @@ var RulersGuides = function (evt, dragdrop, options) {
 
                     if (!negativeRule) {
                         elem.style.display = 'block';
-                        text = pos = (elem.mode === 1) ? (pos - xOffset) + unitLabel : (pos - yOffset) + unitLabel;
+                        text = pos = (elem.mode === 1) ? parseInt((pos - xOffset) / scaleValue) + ' ' + unitLabel : parseInt((pos - yOffset) / scaleValue) + ' ' + unitLabel;
 
                         if (elem.mode === 1) {
                             elem.style.left = pos + 'px';
@@ -893,8 +895,8 @@ var RulersGuides = function (evt, dragdrop, options) {
         wrapper.removeChild(vRuler);
         wrapper.removeChild(hRuler);
 
-        hRuler = new Ruler('h', size[0] + 10);
-        vRuler = new Ruler('v', size[1] + 10);
+        hRuler = new Ruler('h', size[0]);
+        vRuler = new Ruler('v', size[1]);
 
         wrapper.appendChild(hRuler);
         wrapper.appendChild(vRuler);

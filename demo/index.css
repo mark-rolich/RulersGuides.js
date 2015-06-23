@@ -1,8 +1,8 @@
 .box {
-    width: 50%;
-    height: 50%;
+    width: 400px;
+    height: 571px;
     background-color: #3b94ec;
     position: absolute;
-    left: 25%;
-    top: 25%;
+    left: calc(50% - 200px);
+    top: calc(50% - 285px);
 }

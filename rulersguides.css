@@ -8,8 +8,8 @@ html,body {
     top: -32px;
     left: -42px;
     overflow: hidden;
-    width: calc(100% + 42px);
-    height: calc(100% + 32px);
+    width: calc(100% + 43px);
+    height: calc(100% + 33px);
 }
 
 .guide {
@@ -87,13 +87,15 @@ html,body {
     padding-top: 14px;
     border-bottom: solid 1px #000;
     height: 17px;
+    width: calc(100% - 42px)
 }
 
 .ruler.v {
     top: 31px;
     padding-left: 16px;
     width: 25px;
-    border-right: solid 1px #000
+    border-right: solid 1px #000;
+    height: calc(100% - 32px);
 }
 
 .ruler.h span {
@@ -102,7 +104,6 @@ html,body {
     width: 1px;
     vertical-align: bottom;
     display: inline-block;
-    *display: inline;
     zoom: 1
 }
 
