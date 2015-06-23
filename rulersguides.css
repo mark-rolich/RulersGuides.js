@@ -23,7 +23,8 @@ html,body {
     top: 0;
     left: 0;
     z-index: 9991;
-    font-size: 0
+    font-size: 0;
+    pointer-events: all;
 }
 
 .guide.v {
