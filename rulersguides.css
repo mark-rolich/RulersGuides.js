@@ -3,6 +3,11 @@ html,body {
     padding: 0
 }
 
+.hide {
+    display: none;
+    visibility: hidden;
+}
+
 .rg-overlay {
     position: absolute;
     top: -32px;
@@ -10,6 +15,7 @@ html,body {
     overflow: hidden;
     width: calc(100% + 43px);
     height: calc(100% + 33px);
+    pointer-events: none;
 }
 
 .guide {
@@ -184,7 +190,7 @@ html,body {
 }
 
 .menu-btn {
-    position: relative;
+    position: absolute;
     left: -32px;
     top: -27px;
     line-height: 9px;

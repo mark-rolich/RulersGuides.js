@@ -8,7 +8,9 @@
     <link rel="stylesheet" type="text/css" href="../rulersguides.css">
 </head>
 <body>
-    <div class="box" id="rules-container"></div>
+    <div class="box" id="rules-container">
+        <div>Test content</div>
+    </div>
     <script type="text/javascript" src="https://rawgithub.com/mark-rolich/Event.js/master/Event.js"></script>
     <script type="text/javascript" src="https://rawgithub.com/mark-rolich/Dragdrop.js/master/Dragdrop.js"></script>
     <script type="text/javascript" src="../RulersGuides.js"></script>
@@ -18,6 +20,8 @@
                 rg = new RulersGuides(evt, dragdrop, {
                     container: document.getElementById('rules-container'),
                     saveOpenOptionEnable: false,
+                    detailsOptionEnable: false,
+                    optionsMenuEnable: false,
                     unitLabel: 'mm',
                     rulerMilestoneStep: 50,
                     rulerMajorStep: 10,
