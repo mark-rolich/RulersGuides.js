@@ -325,7 +325,9 @@ html,body {
 
 .info-block {
     position: absolute;
-    text-align: left
+    text-align: left;
+    margin-left: 42px;
+    margin-top: 32px;
 }
 
 .info-block.even {

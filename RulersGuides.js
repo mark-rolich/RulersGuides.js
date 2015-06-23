@@ -70,7 +70,6 @@ var RulersGuides = function (evt, dragdrop, options) {
         menuBtn     = null,
         gInfoBlockWrapper = null,
         detailsStatus = 0,
-        resizeTimer = null,
         unitLabel   = (options.unitLabel != undefined) ? options.unitLabel : 'px',
         Ruler       = function (type, size) {
             var ruler       = document.createElement('div'),
@@ -134,14 +133,14 @@ var RulersGuides = function (evt, dragdrop, options) {
             return [w, h];
         },
         getScrollPos = function () {
-            var t = Math.max(doc.scrollTop, body.scrollTop),
-                l = Math.max(doc.scrollLeft, body.scrollLeft);
+            var t = body.scrollTop,
+                l = body.scrollLeft;
 
             return [t, l];
         },
         getScrollSize = function () {
-            var w = Math.max(doc.scrollWidth, body.scrollWidth),
-                h = Math.max(doc.scrollHeight, body.scrollHeight);
+            var w = body.scrollWidth,
+                h = body.scrollHeight;
 
             return [w, h];
         },
@@ -447,9 +446,9 @@ var RulersGuides = function (evt, dragdrop, options) {
             for (i in guides) {
                 if (guides.hasOwnProperty(i)) {
                     if (guides[i].type === 'h') {
-                        hGuides.push(guides[i].y);
+                        hGuides.push(parseInt(guides[i].y));
                     } else {
-                        vGuides.push(guides[i].x);
+                        vGuides.push(parseInt(guides[i].x));
                     }
                 }
             }
@@ -507,10 +506,6 @@ var RulersGuides = function (evt, dragdrop, options) {
                     infoBlockTxt.appendChild(infoData2);
 
                     infoBlock.appendChild(infoBlockTxt);
-
-                    infoBlockTxt.style.marginTop = (i === 0) ? '31px' : '0';
-                    infoBlockTxt.style.marginLeft = (j === 0) ? '42px' : '0';
-
                     infoFrag.appendChild(infoBlock);
                 }
             }
@@ -922,11 +917,13 @@ var RulersGuides = function (evt, dragdrop, options) {
     evt.attach('resize', window, function () {
         var size = getWindowSize();
 
-        wrapper.style.width = size[0] + 'px';
-        wrapper.style.height = size[1] + 'px';
+        wrapper.removeChild(vRuler);
+        wrapper.removeChild(hRuler);
 
-        if (resizeTimer !== null) {
-            window.clearTimeout(resizeTimer);
-        }
+        hRuler = new Ruler('h', size[0] + 10);
+        vRuler = new Ruler('v', size[1] + 10);
+
+        wrapper.appendChild(hRuler);
+        wrapper.appendChild(vRuler);
     });
 };
