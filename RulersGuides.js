@@ -39,37 +39,41 @@ var RulersGuides = function (evt, dragdrop, options) {
     'use strict';
 
     options = (options !== undefined) ? options : {
-        container:  document.body,
-        unitLabel:  'px',
-        saveOpenOptionEnable: true
+        container:              document.body,
+        unitLabel:              'px',
+        saveOpenOptionEnable:   true,
+        rulerMilestoneStep:     25,
+        rulerMajorStep:         5
     };
 
-    var doc         = document.documentElement,
-        body        = options.container,
-        wrapper     = null,
-        hRuler      = null,
-        vRuler      = null,
-        menu        = null,
-        dialogs     = [],
-        openGridDialog = null,
-        mode        = 2,
-        guides      = {},
-        guidesCnt   = 0,
-        gUid        = '',
-        rulerStatus = 1,
-        guideStatus = 1,
-        hBoundStart = 0,
-        hBoundStop  = 0,
-        vBoundStart = 0,
-        vBoundStop  = 0,
-        gridList    = null,
-        gridListLen = 0,
-        menuBtn     = null,
-        gInfoBlockWrapper = null,
-        detailsStatus = 0,
-        unitLabel   = (options.unitLabel !== undefined) ? options.unitLabel : 'px',
-        saveOpen    = (options.saveOpenOptionEnable !== undefined) ? options.saveOpenOptionEnable : false,
-        Ruler       = function (type, size) {
+    var doc                 = document.documentElement,
+        body                = options.container,
+        wrapper             = null,
+        hRuler              = null,
+        vRuler              = null,
+        menu                = null,
+        dialogs             = [],
+        openGridDialog      = null,
+        mode                = 2,
+        guides              = {},
+        guidesCnt           = 0,
+        gUid                = '',
+        rulerStatus         = 1,
+        guideStatus         = 1,
+        hBoundStart         = 0,
+        hBoundStop          = 0,
+        vBoundStart         = 0,
+        vBoundStop          = 0,
+        gridList            = null,
+        gridListLen         = 0,
+        menuBtn             = null,
+        gInfoBlockWrapper   = null,
+        detailsStatus       = 0,
+        unitLabel           = (options.unitLabel !== undefined) ? options.unitLabel : 'px',
+        saveOpen            = (options.saveOpenOptionEnable !== undefined) ? options.saveOpenOptionEnable : false,
+        milestoneStep       = (options.rulerMilestoneStep !== undefined) ? options.rulerMilestoneStep: 50,
+        majorStep           = (options.rulerMajorStep !== undefined) ? options.rulerMajorStep: 10,
+        Ruler               = function (type, size) {
             var ruler       = document.createElement('div'),
                 i           = 0,
                 span        = document.createElement('span'),
@@ -83,7 +87,7 @@ var RulersGuides = function (evt, dragdrop, options) {
             for (i; i < cnt; i = i + 1) {
                 span = span.cloneNode(false);
 
-                if (i % 25 === 0) {
+                if (i % milestoneStep === 0) {
                     span.className = 'milestone';
 
                     if (i > 0) {
@@ -104,7 +108,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                     }
 
                     span.className = 'milestone';
-                } else if (i % 5 === 0) {
+                } else if (i % majorStep === 0) {
                     span.className = 'major';
                 } else {
                     span.className = '';
@@ -118,7 +122,7 @@ var RulersGuides = function (evt, dragdrop, options) {
 
             return ruler;
         },
-        getWindowSize = function () {
+        getWindowSize       = function () {
             var w = Math.min(
                     body.scrollWidth,
                     body.offsetWidth
@@ -130,26 +134,26 @@ var RulersGuides = function (evt, dragdrop, options) {
 
             return [w, h];
         },
-        getScrollPos = function () {
+        getScrollPos        = function () {
             var t = body.scrollTop,
                 l = body.scrollLeft;
 
             return [t, l];
         },
-        getScrollSize = function () {
+        getScrollSize       = function () {
             var w = body.scrollWidth,
                 h = body.scrollHeight;
 
             return [w, h];
         },
-        closeAllDialogs = function () {
+        closeAllDialogs     = function () {
             var i = 0;
 
             for (i; i < dialogs.length; i = i + 1) {
                 dialogs[i].close();
             }
         },
-        removeInboundGuide = function (guide, gUid) {
+        removeInboundGuide  = function (guide, gUid) {
             var scrollPos = getScrollPos();
 
             if (
@@ -172,7 +176,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                 }
             }
         },
-        toggleGuides = function () {
+        toggleGuides        = function () {
             var i;
 
             guideStatus = 1 - guideStatus;
@@ -187,7 +191,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                 wrapper.style.display = 'block';
             }
         },
-        toggleRulers = function () {
+        toggleRulers        = function () {
             rulerStatus = 1 - rulerStatus;
 
             if (rulerStatus === 1) {
@@ -200,14 +204,14 @@ var RulersGuides = function (evt, dragdrop, options) {
                 hRuler.style.display = 'none';
             }
         },
-        removeGrid = function (gridName) {
+        removeGrid          = function (gridName) {
             if (gridList[gridName] !== undefined) {
                 delete gridList[gridName];
                 window.localStorage.setItem('RulersGuides', JSON.stringify(gridList));
                 gridListLen = gridListLen - 1;
             }
         },
-        deleteGuides = function () {
+        deleteGuides        = function () {
             var i;
 
             if (guidesCnt > 0) {
@@ -222,7 +226,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                 gInfoBlockWrapper.style.display = 'none';
             }
         },
-        renderGrid = function (gridName) {
+        renderGrid          = function (gridName) {
             if (gridList[gridName] !== undefined) {
                 var grid        = gridList[gridName],
                     guideId     = null,
@@ -246,7 +250,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                 }
             }
         },
-        OpenGridDialog = function () {
+        OpenGridDialog      = function () {
             var dialog = null,
                 self = this,
                 select = null,
@@ -374,7 +378,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                 dialog.style.display = 'none';
             };
         },
-        saveGrid = function () {
+        saveGrid            = function () {
             if (saveOpen) {
                 var data = {},
                     gridData = {},
@@ -406,7 +410,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                 }
             }
         },
-        showDetailedInfo = function () {
+        showDetailedInfo    = function () {
             var i,
                 j = 0,
                 hGuides = [],
@@ -495,7 +499,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                 gInfoBlockWrapper.style.display = 'none';
             }
         },
-        Menu = function () {
+        Menu                = function () {
             var menuList = null,
                 status   = 0,
                 toggles = {},
@@ -671,7 +675,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                 }
             };
         },
-        prepare  = function () {
+        prepare             = function () {
             var size = getWindowSize();
 
             setTimeout(function () {
