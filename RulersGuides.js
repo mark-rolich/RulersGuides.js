@@ -5,9 +5,7 @@
 * It is possible to open/save created guides as grids
 * (Note: grids will be saved on a page location basis, so it's not possible to use the same grids in another browser window/tab).
 * Rulers can be unlocked, so that one of the rulers will scroll along the page and the other will be always visible.
-* Guides can be snapped to defined number of pixels.
 * Detailed info mode is available, which shows position and size of regions created by the guides.
-* Guides can be snapped to DOM elements (experimental)
 *
 * Following hotkeys are available:
 *
@@ -18,9 +16,7 @@
 * Save grid dialog - Ctrl+Alt+S
 * Open grid dialog - Ctrl+Alt+P
 * Lock/unlock rulers - Ctrl+Alt+L
-* Open Snap to dialog - Ctrl+Alt+C
 * Toggle detailed info - Ctrl+Alt+I
-* Snap to DOM elements - Ctrl+Alt+E
 *
 * Look-and-feel can be adjusted using CSS.
 *
@@ -58,10 +54,7 @@ var RulersGuides = function (evt, dragdrop, options) {
         vRuler      = null,
         menu        = null,
         dialogs     = [],
-        snapDialog  = null,
         openGridDialog = null,
-        xSnap       = 0,
-        ySnap       = 0,
         mode        = 2,
         guides      = {},
         guidesCnt   = 0,
@@ -564,10 +557,6 @@ var RulersGuides = function (evt, dragdrop, options) {
                     'hotkey': 'Ctrl + Alt + G',
                     'alias': 'save'
                 }, {
-                    'text': 'Snap to',
-                    'hotkey': 'Ctrl + Alt + C',
-                    'alias': 'snap'
-                }, {
                     'text': 'Show detailed info',
                     'hotkey': 'Ctrl + Alt + I',
                     'alias': 'details'
@@ -658,10 +647,6 @@ var RulersGuides = function (evt, dragdrop, options) {
                     saveGrid();
                 });
 
-                evt.attach('mousedown', toggles.snap.obj, function () {
-                    snapDialog.open();
-                });
-
                 evt.attach('mousedown', toggles.details.obj, function () {
                     detailsStatus = 1 - detailsStatus;
                     showDetailedInfo();
@@ -714,123 +699,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                 }
             };
         },
-        SnapDialog = function () {
-            var dialog = null,
-                xInput = null,
-                yInput = null,
-                self   = this;
-
-            this.render = function () {
-                if (dialog === null) {
-                    dialog = document.createElement('div');
-                    xInput = document.createElement('input');
-                    yInput = xInput.cloneNode(false);
-
-                    var text = document.createTextNode(''),
-                        okBtn = document.createElement('button'),
-                        xLabel = document.createElement('label'),
-                        titleBar = dialog.cloneNode(false),
-                        dialogWrapper = dialog.cloneNode(false),
-                        inputWrapper = dialog.cloneNode(false),
-                        btnWrapper = dialog.cloneNode(false),
-                        resetBtn = okBtn.cloneNode(false),
-                        cancelBtn = okBtn.cloneNode(false),
-                        yLabel = xLabel.cloneNode(false),
-                        titleBarTxt = text.cloneNode(false),
-                        xLabelTxt = text.cloneNode(false),
-                        yLabelTxt = text.cloneNode(false),
-                        okBtnTxt = text.cloneNode(false),
-                        resetBtnTxt = text.cloneNode(false),
-                        cancelBtnTxt = text.cloneNode(false);
-
-                    titleBarTxt.nodeValue = 'Snap guides to';
-                    xLabelTxt.nodeValue = 'X';
-                    yLabelTxt.nodeValue = 'Y';
-                    okBtnTxt.nodeValue = 'OK';
-                    resetBtnTxt.nodeValue = 'Reset';
-                    cancelBtnTxt.nodeValue = 'Cancel';
-
-                    dialog.className = 'dialog snap-dialog';
-                    titleBar.className = 'title-bar';
-                    dialogWrapper.className = 'wrapper';
-
-                    xLabel.className = 'rg-x-label';
-                    xLabel.setAttribute('for', 'rg-x-snap');
-
-                    yLabel.className = 'rg-y-label';
-                    yLabel.setAttribute('for', 'rg-y-snap');
-
-                    xInput.setAttribute('type', 'number');
-                    xInput.value = '100';
-                    xInput.id = 'rg-x-snap';
-
-                    xInput.setAttribute('type', 'number');
-                    yInput.value = '100';
-                    yInput.id = 'rg-y-snap';
-
-                    okBtn.className = 'ok-btn';
-                    resetBtn.className = 'reset-btn';
-                    cancelBtn.className = 'cancel-btn';
-
-                    titleBar.appendChild(titleBarTxt);
-
-                    xLabel.appendChild(xLabelTxt);
-                    yLabel.appendChild(yLabelTxt);
-                    okBtn.appendChild(okBtnTxt);
-                    resetBtn.appendChild(resetBtnTxt);
-                    cancelBtn.appendChild(cancelBtnTxt);
-
-                    inputWrapper.appendChild(xLabel);
-                    inputWrapper.appendChild(xInput);
-                    inputWrapper.appendChild(yLabel);
-                    inputWrapper.appendChild(yInput);
-                    inputWrapper.appendChild(resetBtn);
-
-                    btnWrapper.appendChild(okBtn);
-                    btnWrapper.appendChild(cancelBtn);
-
-                    dialogWrapper.appendChild(inputWrapper);
-                    dialogWrapper.appendChild(btnWrapper);
-
-                    dialog.appendChild(titleBar);
-                    dialog.appendChild(dialogWrapper);
-
-                    body.appendChild(dialog);
-
-                    evt.attach('mousedown', okBtn, function () {
-                        xSnap = parseInt(xInput.value, 10);
-                        ySnap = parseInt(yInput.value, 10);
-
-                        self.close();
-                    });
-
-                    evt.attach('mousedown', resetBtn, function () {
-                        xSnap = 0;
-                        ySnap = 0;
-                        self.close();
-                    });
-
-                    evt.attach('mousedown', cancelBtn, function () {
-                        self.close();
-                    });
-                }
-            };
-
-            this.render();
-
-            this.open = function () {
-                closeAllDialogs();
-
-                dialog.style.display = 'block';
-                dialog.style.left = ((doc.clientWidth - dialog.clientWidth) / 2) + 'px';
-                dialog.style.top = ((doc.clientHeight - dialog.clientHeight) / 2) + 'px';
-            };
-
-            this.close = function () {
-                dialog.style.display = 'none';
-            };
-        },
-        prepare     = function () {
+        prepare  = function () {
             var size = getWindowSize(),
                 elements = document.getElementsByTagName('*'),
                 len = elements.length,
@@ -853,10 +722,9 @@ var RulersGuides = function (evt, dragdrop, options) {
                 body.appendChild(wrapper);
 
                 menu = new Menu();
-                snapDialog = new SnapDialog();
                 openGridDialog = new OpenGridDialog();
 
-                dialogs = [snapDialog, openGridDialog];
+                dialogs = [openGridDialog];
             }, 10);
         };
 
@@ -898,8 +766,7 @@ var RulersGuides = function (evt, dragdrop, options) {
             guide           = null,
             guideInfo       = null,
             guideInfoText   = null,
-            scrollPos       = getScrollPos(),
-            snap            = 0;
+            scrollPos       = getScrollPos();
 
         if (src.className.indexOf('menu-btn') === -1) {
             menu.close();
@@ -930,13 +797,11 @@ var RulersGuides = function (evt, dragdrop, options) {
                 guide.className = 'guide h draggable';
                 guide.style.top = yOffset + 'px';
                 guide.type = 'h';
-                snap = ySnap;
                 mode = 2;
             } else if (y > hBoundStop && x < vBoundStop) {
                 guide.className = 'guide v draggable';
                 guide.style.left = xOffset + 'px';
                 guide.type = 'v';
-                snap = xSnap;
                 mode = 1;
             }
 
@@ -995,8 +860,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                     elem.out = evt.attach('mouseout', elem, function () {
                         elem.info.style.display = 'none';
                     });
-                },
-                snap: snap
+                }
             });
 
             dragdrop.start(e, guide);
@@ -1037,9 +901,6 @@ var RulersGuides = function (evt, dragdrop, options) {
                 break;
             case 68:
                 deleteGuides();
-                break;
-            case 67:
-                snapDialog.open();
                 break;
             case 65:
                 if (rulerStatus === 1 || guideStatus === 1) {
