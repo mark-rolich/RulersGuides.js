@@ -1,44 +1,44 @@
 /**
-* This Javascript package creates Photoshop-like guides and rulers interface on a web page.
-* Guides are created by click-and-dragging corresponding horizontal or vertical ruler.
-* Guide positions could be saved in a local storage and opened later (on a page location basis)
-* It is possible to open/save created guides as grids
-* (Note: grids will be saved on a page location basis, so it's not possible to use the same grids in another browser window/tab).
-* Detailed info mode is available, which shows position and size of regions created by the guides.
-*
-* Following hotkeys are available:
-*
-* Toggle rulers - Ctrl+Alt+R
-* Toggle guides - Ctrl+Alt+G
-* Toggle rulers and guides - Ctrl+Alt+A
-* Clear all guides - Ctrl+Alt+D
-* Save grid dialog - Ctrl+Alt+S
-* Open grid dialog - Ctrl+Alt+P
-* Toggle detailed info - Ctrl+Alt+I
-*
-* Look-and-feel can be adjusted using CSS.
-*
-* RulersGuides.js is available as a bookmarklet, please see bookmarklet.js file
-* provided with the package
-*
-* RulersGuides.js requires Event.js and Dragdrop.js packages, which can be acquired at the following links:
-*
-* Event.js
-*
-* Github - https://github.com/mark-rolich/Event.js
-* JS Classes - http://www.jsclasses.org/package/212-JavaScript-Handle-events-in-a-browser-independent-manner.html
-*
-* Dragdrop.js
-*
-* Github - https://github.com/mark-rolich/Dragdrop.js
-* JS Classes - http://www.jsclasses.org/package/215-JavaScript-Handle-drag-and-drop-events-of-page-elements.html
-*
-* @author Mark Rolich <mark.rolich@gmail.com>
-*/
+ * This Javascript package creates Photoshop-like guides and rulers interface on a web page.
+ * Guides are created by click-and-dragging corresponding horizontal or vertical ruler.
+ * Guide positions could be saved in a local storage and opened later (on a page location basis)
+ * It is possible to open/save created guides as grids
+ * (Note: grids will be saved on a page location basis, so it's not possible to use the same grids in another browser window/tab).
+ * Detailed info mode is available, which shows position and size of regions created by the guides.
+ *
+ * Following hotkeys are available:
+ *
+ * Toggle rulers - Ctrl+Alt+R
+ * Toggle guides - Ctrl+Alt+G
+ * Toggle rulers and guides - Ctrl+Alt+A
+ * Clear all guides - Ctrl+Alt+D
+ * Save grid dialog - Ctrl+Alt+S
+ * Open grid dialog - Ctrl+Alt+P
+ * Toggle detailed info - Ctrl+Alt+I
+ *
+ * Look-and-feel can be adjusted using CSS.
+ *
+ * RulersGuides.js is available as a bookmarklet, please see bookmarklet.js file
+ * provided with the package
+ *
+ * RulersGuides.js requires Event.js and Dragdrop.js packages, which can be acquired at the following links:
+ *
+ * Event.js
+ *
+ * Github - https://github.com/mark-rolich/Event.js
+ * JS Classes - http://www.jsclasses.org/package/212-JavaScript-Handle-events-in-a-browser-independent-manner.html
+ *
+ * Dragdrop.js
+ *
+ * Github - https://github.com/mark-rolich/Dragdrop.js
+ * JS Classes - http://www.jsclasses.org/package/215-JavaScript-Handle-drag-and-drop-events-of-page-elements.html
+ *
+ * @author Mark Rolich <mark.rolich@gmail.com>
+ */
 var RulersGuides = function (evt, dragdrop, options) {
     'use strict';
 
-    options = (options != undefined) ? options : {
+    options = (options !== undefined) ? options : {
         container:  document.body,
         unitLabel:  'px',
         saveOpenOptionEnable: true
@@ -67,8 +67,8 @@ var RulersGuides = function (evt, dragdrop, options) {
         menuBtn     = null,
         gInfoBlockWrapper = null,
         detailsStatus = 0,
-        unitLabel   = (options.unitLabel != undefined) ? options.unitLabel : 'px',
-        saveOpen    = (options.saveOpenOptionEnable != undefined) ? options.saveOpenOptionEnable : false,
+        unitLabel   = (options.unitLabel !== undefined) ? options.unitLabel : 'px',
+        saveOpen    = (options.saveOpenOptionEnable !== undefined) ? options.saveOpenOptionEnable : false,
         Ruler       = function (type, size) {
             var ruler       = document.createElement('div'),
                 i           = 0,
@@ -154,8 +154,8 @@ var RulersGuides = function (evt, dragdrop, options) {
 
             if (
                 rulerStatus === 1 && guideStatus === 1 && (
-                    (guide.className === 'guide h draggable' && guide.offsetTop < hBound + scrollPos[0]) ||
-                    (guide.className === 'guide v draggable' && guide.offsetLeft < vBound + scrollPos[1])
+                    (guide.className === 'guide h draggable' && guide.offsetTop < hBoundStart + scrollPos[0]) ||
+                    (guide.className === 'guide v draggable' && guide.offsetLeft < vBoundStart + scrollPos[1])
                 )
             ) {
                 wrapper.removeChild(guide);
@@ -179,9 +179,7 @@ var RulersGuides = function (evt, dragdrop, options) {
 
             for (i in guides) {
                 if (guides.hasOwnProperty(i)) {
-                    guides[i].style.display = (guideStatus === 1)
-                        ? 'block'
-                        : 'none';
+                    guides[i].style.display = (guideStatus === 1) ? 'block' : 'none';
                 }
             }
 
@@ -464,9 +462,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                     infoBlock.className += (
                         (i % 2 !== 0 && j % 2 !== 0) ||
                         (i % 2 === 0 && j % 2 === 0)
-                    )
-                        ? ' even'
-                        : ' odd';
+                    ) ? ' even' : ' odd';
 
                     infoBlock.style.top = hGuides[i] + 'px';
                     infoBlock.style.left = vGuides[j] + 'px';
@@ -555,7 +551,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                     liDescTxt = document.createTextNode(''),
                     liHotKeyTxt = liDescTxt.cloneNode(false);
 
-                liLink.href = 'javascript:';
+                liLink.href = '';
                 liDesc.className = 'desc';
                 liHotKey.className = 'hotkey';
 
@@ -632,9 +628,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                 body.appendChild(menuList);
 
                 evt.attach('mousedown', menuBtn, function () {
-                    toggles.rulers.txt.nodeValue = (rulerStatus === 1)
-                        ? 'Hide rulers'
-                        : 'Show rulers';
+                    toggles.rulers.txt.nodeValue = (rulerStatus === 1) ? 'Hide rulers' : 'Show rulers';
 
                     if (guidesCnt > 0) {
                         toggles.guides.obj.className = '';
@@ -644,9 +638,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                             toggles.save.obj.className = '';
                         }
 
-                        toggles.guides.txt.nodeValue = (guideStatus === 1)
-                            ? 'Hide guides'
-                            : 'Show guides';
+                        toggles.guides.txt.nodeValue = (guideStatus === 1) ? 'Hide guides' : 'Show guides';
                     } else {
                         toggles.guides.obj.className = 'disabled';
                         toggles.clear.obj.className = 'disabled';
@@ -656,9 +648,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                         }
                     }
 
-                    toggles.all.txt.nodeValue = (rulerStatus === 1 || guideStatus === 1)
-                        ? 'Hide all'
-                        : 'Show all';
+                    toggles.all.txt.nodeValue = (rulerStatus === 1 || guideStatus === 1) ? 'Hide all' : 'Show all';
 
                     toggles.details.txt.nodeValue = (detailsStatus === 0) ? 'Show detailed info' : 'Hide detailed info';
 
@@ -682,10 +672,7 @@ var RulersGuides = function (evt, dragdrop, options) {
             };
         },
         prepare  = function () {
-            var size = getWindowSize(),
-                elements = document.getElementsByTagName('*'),
-                len = elements.length,
-                i = 0;
+            var size = getWindowSize();
 
             setTimeout(function () {
                 hRuler = new Ruler('h', size[0] + 10);
@@ -747,8 +734,7 @@ var RulersGuides = function (evt, dragdrop, options) {
             yOffset         = Math.abs(vRuler.parentElement.offsetTop) - 2,
             guide           = null,
             guideInfo       = null,
-            guideInfoText   = null,
-            scrollPos       = getScrollPos();
+            guideInfoText   = null;
 
         if (src.className.indexOf('menu-btn') === -1) {
             menu.close();
@@ -808,10 +794,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                     }
                 },
                 onmove: function (elem) {
-                    var text, pos, negativeRule,
-                        dims    = [],
-                        len     = 0,
-                        i       = 0;
+                    var text, pos, negativeRule;
 
                     pos = (elem.mode === 1) ? elem.style.left : elem.style.top;
                     pos = parseInt(pos, 10);
@@ -835,7 +818,7 @@ var RulersGuides = function (evt, dragdrop, options) {
                     }
                 },
                 onstop: function (elem) {
-                    elem.over = evt.attach('mouseover', elem, function (e, src) {
+                    elem.over = evt.attach('mouseover', elem, function () {
                         elem.info.style.display = 'block';
                     });
 
@@ -862,40 +845,40 @@ var RulersGuides = function (evt, dragdrop, options) {
     evt.attach('keyup', document, function (e) {
         if (e.ctrlKey === true && e.altKey === true) {
             switch (e.keyCode) {
-            case 83:
-                saveGrid();
-                break;
-            case 82:
-                toggleRulers();
-                break;
-            case 79:
-                if (saveOpen) {
-                    openGridDialog.open();
-                }
-                break;
-            case 73:
-                detailsStatus = 1 - detailsStatus;
-                showDetailedInfo();
-                break;
-            case 71:
-                toggleGuides();
-                break;
-            case 68:
-                deleteGuides();
-                break;
-            case 65:
-                if (rulerStatus === 1 || guideStatus === 1) {
-                    rulerStatus = guideStatus = 1;
-                    wrapper.style.display = 'none';
-                } else {
-                    rulerStatus = guideStatus = 0;
-                    wrapper.style.display = 'block';
-                }
+                case 83:
+                    saveGrid();
+                    break;
+                case 82:
+                    toggleRulers();
+                    break;
+                case 79:
+                    if (saveOpen) {
+                        openGridDialog.open();
+                    }
+                    break;
+                case 73:
+                    detailsStatus = 1 - detailsStatus;
+                    showDetailedInfo();
+                    break;
+                case 71:
+                    toggleGuides();
+                    break;
+                case 68:
+                    deleteGuides();
+                    break;
+                case 65:
+                    if (rulerStatus === 1 || guideStatus === 1) {
+                        rulerStatus = guideStatus = 1;
+                        wrapper.style.display = 'none';
+                    } else {
+                        rulerStatus = guideStatus = 0;
+                        wrapper.style.display = 'block';
+                    }
 
-                toggleRulers();
-                toggleGuides();
+                    toggleRulers();
+                    toggleGuides();
 
-                break;
+                    break;
             }
         }
     });
