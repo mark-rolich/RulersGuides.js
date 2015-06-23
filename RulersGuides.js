@@ -164,8 +164,8 @@ var RulersGuides = function (evt, dragdrop, options) {
 
             if (
                 rulerStatus === 1 && guideStatus === 1 && (
-                    (guide.className === 'guide h draggable' && guide.offsetTop < hBoundStart + scrollPos[0]) ||
-                    (guide.className === 'guide v draggable' && guide.offsetLeft < vBoundStart + scrollPos[1])
+                    (guide.className === 'guide h draggable' && guide.offsetTop < Math.abs(guide.parentElement.offsetTop) + scrollPos[0]) ||
+                    (guide.className === 'guide v draggable' && guide.offsetLeft < Math.abs(guide.parentElement.offsetLeft) + scrollPos[1])
                 )
             ) {
                 wrapper.removeChild(guide);
