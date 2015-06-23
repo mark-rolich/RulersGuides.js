@@ -41,7 +41,9 @@ var RulersGuides = function (evt, dragdrop, options) {
     options = (options !== undefined) ? options : {
         container:              document.body,
         unitLabel:              'px',
-        saveOpenOptionEnable:   true,
+        saveOpenOptionEnable:   false,
+        detailsOptionEnable:    false,
+        optionsMenuEnable:      true,
         rulerMilestoneStep:     50,
         rulerMajorStep:         10,
         pixelToUnitScale:       1
@@ -72,9 +74,11 @@ var RulersGuides = function (evt, dragdrop, options) {
         detailsStatus       = 0,
         unitLabel           = (options.unitLabel !== undefined) ? options.unitLabel : 'px',
         saveOpen            = (options.saveOpenOptionEnable !== undefined) ? options.saveOpenOptionEnable : false,
+        showDetails         = (options.detailsOptionEnable !== undefined) ? options.detailsOptionEnable : false,
         milestoneStep       = (options.rulerMilestoneStep !== undefined) ? options.rulerMilestoneStep: 50,
         majorStep           = (options.rulerMajorStep !== undefined) ? options.rulerMajorStep: 10,
         scaleValue          = (options.pixelToUnitScale !== undefined) ? options.pixelToUnitScale: 1,
+        menuEnable          = (options.optionsMenuEnable !== undefined) ? options.optionsMenuEnable: true,
         Ruler               = function (type, size) {
             var ruler       = document.createElement('div'),
                 i           = 0,
@@ -413,93 +417,96 @@ var RulersGuides = function (evt, dragdrop, options) {
             }
         },
         showDetailedInfo    = function () {
-            var i,
-                j = 0,
-                hGuides = [],
-                vGuides = [],
-                scrollSize = getScrollSize(),
-                infoBlockWrapper = document.createElement('div'),
-                infoFrag = document.createDocumentFragment(),
-                infoBlock = infoBlockWrapper.cloneNode(false),
-                infoBlockTxt = infoBlockWrapper.cloneNode(false),
-                infoData1 = document.createTextNode(''),
-                infoData2 = infoData1.cloneNode(false),
-                text = '',
-                br = document.createElement('br');
+            if (showDetails) {
+                var i,
+                    j = 0,
+                    hGuides = [],
+                    vGuides = [],
+                    scrollSize = getScrollSize(),
+                    infoBlockWrapper = document.createElement('div'),
+                    infoFrag = document.createDocumentFragment(),
+                    infoBlock = infoBlockWrapper.cloneNode(false),
+                    infoBlockTxt = infoBlockWrapper.cloneNode(false),
+                    infoData1 = document.createTextNode(''),
+                    infoData2 = infoData1.cloneNode(false),
+                    text = '',
+                    br = document.createElement('br');
 
-            for (i in guides) {
-                if (guides.hasOwnProperty(i)) {
-                    if (guides[i].type === 'h') {
-                        hGuides.push(parseInt(guides[i].y));
-                    } else {
-                        vGuides.push(parseInt(guides[i].x));
+                for (i in guides) {
+                    if (guides.hasOwnProperty(i)) {
+                        if (guides[i].type === 'h') {
+                            hGuides.push(parseInt(guides[i].y) * scaleValue);
+                        } else {
+                            vGuides.push(parseInt(guides[i].x) * scaleValue);
+                        }
                     }
                 }
-            }
 
-            vGuides.unshift(0);
-            vGuides.push(scrollSize[0]);
+                vGuides.unshift(0);
+                vGuides.push(scrollSize[0]);
 
-            hGuides.unshift(0);
-            hGuides.push(scrollSize[1]);
+                hGuides.unshift(0);
+                hGuides.push(scrollSize[1]);
 
-            vGuides = vGuides.sort(function (a, b) {
-                return a - b;
-            });
+                vGuides = vGuides.sort(function (a, b) {
+                    return a - b;
+                });
 
-            hGuides = hGuides.sort(function (a, b) {
-                return a - b;
-            });
+                hGuides = hGuides.sort(function (a, b) {
+                    return a - b;
+                });
 
-            for (i = 0; i < hGuides.length - 1; i = i + 1) {
-                j = 0;
+                for (i = 0; i < hGuides.length - 1; i = i + 1) {
+                    j = 0;
 
-                for (j; j < vGuides.length - 1; j = j + 1) {
-                    infoBlock = infoBlock.cloneNode(false);
-                    infoBlockTxt = infoBlockTxt.cloneNode(false);
-                    infoData1 = infoData1.cloneNode(false);
-                    infoData2 = infoData2.cloneNode(false);
-                    br = br.cloneNode();
+                    for (j; j < vGuides.length - 1; j = j + 1) {
+                        infoBlock = infoBlock.cloneNode(false);
+                        infoBlockTxt = infoBlockTxt.cloneNode(false);
+                        infoData1 = infoData1.cloneNode(false);
+                        infoData2 = infoData2.cloneNode(false);
+                        br = br.cloneNode();
 
-                    infoBlockWrapper.className = 'info-block-wrapper';
-                    infoBlock.className = 'info-block';
-                    infoBlockTxt.className = 'info-block-txt';
+                        infoBlockWrapper.className = 'info-block-wrapper';
+                        infoBlock.className = 'info-block';
+                        infoBlockTxt.className = 'info-block-txt';
 
-                    infoBlock.className += (
-                        (i % 2 !== 0 && j % 2 !== 0) ||
-                        (i % 2 === 0 && j % 2 === 0)
-                    ) ? ' even' : ' odd';
+                        infoBlock.className += (
+                            (i % 2 !== 0 && j % 2 !== 0) ||
+                            (i % 2 === 0 && j % 2 === 0)
+                        ) ? ' even' : ' odd';
 
-                    infoBlock.style.top = hGuides[i] + 'px';
-                    infoBlock.style.left = vGuides[j] + 'px';
-                    infoBlock.style.width = (vGuides[j + 1] - vGuides[j]) + 'px';
-                    infoBlock.style.height = (hGuides[i + 1] - hGuides[i]) + 'px';
+                        infoBlock.style.top = (hGuides[i]) + 'px';
+                        infoBlock.style.left = (vGuides[j]) + 'px';
+                        infoBlock.style.width = ((vGuides[j + 1] - vGuides[j])) + 'px';
+                        infoBlock.style.height = ((hGuides[i + 1] - hGuides[i])) + 'px';
 
-                    text = (vGuides[j + 1] - vGuides[j]) + ' x ' + (hGuides[i + 1] - hGuides[i]);
+                        text = parseInt((vGuides[j + 1] - vGuides[j]) / scaleValue) + ' x ' + parseInt((hGuides[i + 1] - hGuides[i]) / scaleValue);
 
-                    infoData1.nodeValue = text;
+                        infoData1.nodeValue = text;
 
-                    text = hGuides[i] + ' : ' + vGuides[j];
+                        text = parseInt(hGuides[i] / scaleValue) + ' : ' + parseInt(vGuides[j] / scaleValue);
 
-                    infoData2.nodeValue = text;
+                        infoData2.nodeValue = text;
 
-                    infoBlockTxt.appendChild(infoData1);
-                    infoBlockTxt.appendChild(br);
-                    infoBlockTxt.appendChild(infoData2);
+                        infoBlockTxt.appendChild(infoData1);
+                        infoBlockTxt.appendChild(br);
+                        infoBlockTxt.appendChild(infoData2);
 
-                    infoBlock.appendChild(infoBlockTxt);
-                    infoFrag.appendChild(infoBlock);
+                        infoBlock.appendChild(infoBlockTxt);
+                        infoFrag.appendChild(infoBlock);
+                    }
+                }
+
+                infoBlockWrapper.appendChild(infoFrag);
+
+                if (detailsStatus === 1) {
+                    wrapper.replaceChild(infoBlockWrapper, gInfoBlockWrapper);
+                    gInfoBlockWrapper = infoBlockWrapper;
+                } else {
+                    gInfoBlockWrapper.style.display = 'none';
                 }
             }
 
-            infoBlockWrapper.appendChild(infoFrag);
-
-            if (detailsStatus === 1) {
-                wrapper.replaceChild(infoBlockWrapper, gInfoBlockWrapper);
-                gInfoBlockWrapper = infoBlockWrapper;
-            } else {
-                gInfoBlockWrapper.style.display = 'none';
-            }
         },
         Menu                = function () {
             var menuList = null,
@@ -521,10 +528,6 @@ var RulersGuides = function (evt, dragdrop, options) {
                     'text': 'Clear all guides',
                     'hotkey': 'Ctrl + Alt + D',
                     'alias': 'clear'
-                }, {
-                    'text': 'Show detailed info',
-                    'hotkey': 'Ctrl + Alt + I',
-                    'alias': 'details'
                 }],
                 i = 0;
 
@@ -541,9 +544,18 @@ var RulersGuides = function (evt, dragdrop, options) {
                     'alias': 'save'
                 });
             }
+
+            if (showDetails) {
+                menuItemsList.push( {
+                    'text': 'Show detailed info',
+                    'hotkey': 'Ctrl + Alt + I',
+                    'alias': 'details'
+                });
+            }
+
             this.render = function () {
                 menuBtn = document.createElement('div');
-                menuBtn.className = 'menu-btn unselectable';
+                menuBtn.className = (menuEnable) ? 'menu-btn unselectable' : 'menu-btn unselectable hide';
                 menuBtn.appendChild(document.createTextNode('\u250C'));
 
                 menuList = document.createElement('ul');
@@ -613,10 +625,12 @@ var RulersGuides = function (evt, dragdrop, options) {
                     deleteGuides();
                 });
 
-                evt.attach('mousedown', toggles.details.obj, function () {
-                    detailsStatus = 1 - detailsStatus;
-                    showDetailedInfo();
-                });
+                if (showDetails) {
+                    evt.attach('mousedown', toggles.details.obj, function () {
+                        detailsStatus = 1 - detailsStatus;
+                        showDetailedInfo();
+                    });
+                }
 
                 if (saveOpen) {
                     evt.attach('mousedown', toggles.open.obj, function () {
@@ -656,7 +670,9 @@ var RulersGuides = function (evt, dragdrop, options) {
 
                     toggles.all.txt.nodeValue = (rulerStatus === 1 || guideStatus === 1) ? 'Hide all' : 'Show all';
 
-                    toggles.details.txt.nodeValue = (detailsStatus === 0) ? 'Show detailed info' : 'Hide detailed info';
+                    if (showDetails) {
+                        toggles.details.txt.nodeValue = (detailsStatus === 0) ? 'Show detailed info' : 'Hide detailed info';
+                    }
 
                     if (saveOpen) {
                         toggles.open.obj.className = (gridListLen > 0) ? '' : 'disabled';
