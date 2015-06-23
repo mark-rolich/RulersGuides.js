@@ -4,7 +4,6 @@
 * Guide positions could be saved in a local storage and opened later (on a page location basis)
 * It is possible to open/save created guides as grids
 * (Note: grids will be saved on a page location basis, so it's not possible to use the same grids in another browser window/tab).
-* Rulers can be unlocked, so that one of the rulers will scroll along the page and the other will be always visible.
 * Detailed info mode is available, which shows position and size of regions created by the guides.
 *
 * Following hotkeys are available:
@@ -15,7 +14,6 @@
 * Clear all guides - Ctrl+Alt+D
 * Save grid dialog - Ctrl+Alt+S
 * Open grid dialog - Ctrl+Alt+P
-* Lock/unlock rulers - Ctrl+Alt+L
 * Toggle detailed info - Ctrl+Alt+I
 *
 * Look-and-feel can be adjusted using CSS.
@@ -42,14 +40,13 @@ var RulersGuides = function (evt, dragdrop, options) {
 
     options = (options != undefined) ? options : {
         container:  document.body,
-        unitLabel:  'px'
+        unitLabel:  'px',
+        saveOpenOptionEnable: true
     };
 
     var doc         = document.documentElement,
         body        = options.container,
         wrapper     = null,
-        lockHandler = null,
-        locked      = 1,
         hRuler      = null,
         vRuler      = null,
         menu        = null,
@@ -71,6 +68,7 @@ var RulersGuides = function (evt, dragdrop, options) {
         gInfoBlockWrapper = null,
         detailsStatus = 0,
         unitLabel   = (options.unitLabel != undefined) ? options.unitLabel : 'px',
+        saveOpen    = (options.saveOpenOptionEnable != undefined) ? options.saveOpenOptionEnable : false,
         Ruler       = function (type, size) {
             var ruler       = document.createElement('div'),
                 i           = 0,
@@ -378,53 +376,35 @@ var RulersGuides = function (evt, dragdrop, options) {
                 dialog.style.display = 'none';
             };
         },
-        toggleRulersLock = function () {
-            if (locked === 0) {
-                if (lockHandler !== null) {
-                    evt.detach('scroll', window, lockHandler);
-                }
-            } else {
-                lockHandler = evt.attach('scroll', window, function () {
-                    var pos = getScrollPos(),
-                        size = getScrollSize();
-
-                    hRuler.style.top = pos[0] + 'px';
-                    wrapper.style.height = size[1] + 'px';
-
-                    vRuler.style.left = pos[1] + 'px';
-                    wrapper.style.width = size[0] + 'px';
-                });
-            }
-
-            locked = 1 - locked;
-        },
         saveGrid = function () {
-            var data = {},
-                gridData = {},
-                i,
-                gridName = '';
+            if (saveOpen) {
+                var data = {},
+                    gridData = {},
+                    i,
+                    gridName = '';
 
-            while (gridName === '' && guidesCnt > 0) {
-                gridName = window.prompt('Save grid as');
+                while (gridName === '' && guidesCnt > 0) {
+                    gridName = window.prompt('Save grid as');
 
-                if (gridName !== '' && gridName !== false && gridName !== null && window.localStorage) {
-                    for (i in guides) {
-                        if (guides.hasOwnProperty(i)) {
-                            gridData[i] = {
-                                'cssClass' : guides[i].className,
-                                'style' : guides[i].style.cssText
-                            };
+                    if (gridName !== '' && gridName !== false && gridName !== null && window.localStorage) {
+                        for (i in guides) {
+                            if (guides.hasOwnProperty(i)) {
+                                gridData[i] = {
+                                    'cssClass' : guides[i].className,
+                                    'style' : guides[i].style.cssText
+                                };
+                            }
                         }
+
+                        if (window.localStorage.getItem('RulersGuides') !== null) {
+                            data = JSON.parse(window.localStorage.getItem('RulersGuides'));
+                        }
+
+                        data[gridName] = gridData;
+                        window.localStorage.setItem('RulersGuides', JSON.stringify(data));
+
+                        gridListLen = gridListLen + 1;
                     }
-
-                    if (window.localStorage.getItem('RulersGuides') !== null) {
-                        data = JSON.parse(window.localStorage.getItem('RulersGuides'));
-                    }
-
-                    data[gridName] = gridData;
-                    window.localStorage.setItem('RulersGuides', JSON.stringify(data));
-
-                    gridListLen = gridListLen + 1;
                 }
             }
         },
@@ -536,21 +516,9 @@ var RulersGuides = function (evt, dragdrop, options) {
                     'hotkey': 'Ctrl + Alt + A',
                     'alias': 'all'
                 }, {
-                    'text': 'Unlock rulers',
-                    'hotkey': 'Ctrl + Alt + L',
-                    'alias': 'lock'
-                }, {
                     'text': 'Clear all guides',
                     'hotkey': 'Ctrl + Alt + D',
                     'alias': 'clear'
-                }, {
-                    'text': 'Open grid',
-                    'hotkey': 'Ctrl + Alt + O',
-                    'alias': 'open'
-                }, {
-                    'text': 'Save grid',
-                    'hotkey': 'Ctrl + Alt + G',
-                    'alias': 'save'
                 }, {
                     'text': 'Show detailed info',
                     'hotkey': 'Ctrl + Alt + I',
@@ -558,6 +526,19 @@ var RulersGuides = function (evt, dragdrop, options) {
                 }],
                 i = 0;
 
+            if (saveOpen) {
+                menuItemsList.push({
+                    'text': 'Open grid',
+                    'hotkey': 'Ctrl + Alt + O',
+                    'alias': 'open'
+                });
+
+                menuItemsList.push({
+                    'text': 'Save grid',
+                    'hotkey': 'Ctrl + Alt + G',
+                    'alias': 'save'
+                });
+            }
             this.render = function () {
                 menuBtn = document.createElement('div');
                 menuBtn.className = 'menu-btn unselectable';
@@ -626,26 +607,24 @@ var RulersGuides = function (evt, dragdrop, options) {
                     toggleGuides();
                 });
 
-                evt.attach('mousedown', toggles.lock.obj, function () {
-                    toggleRulersLock();
-                });
-
                 evt.attach('mousedown', toggles.clear.obj, function () {
                     deleteGuides();
-                });
-
-                evt.attach('mousedown', toggles.open.obj, function () {
-                    openGridDialog.open();
-                });
-
-                evt.attach('mousedown', toggles.save.obj, function () {
-                    saveGrid();
                 });
 
                 evt.attach('mousedown', toggles.details.obj, function () {
                     detailsStatus = 1 - detailsStatus;
                     showDetailedInfo();
                 });
+
+                if (saveOpen) {
+                    evt.attach('mousedown', toggles.open.obj, function () {
+                        openGridDialog.open();
+                    });
+
+                    evt.attach('mousedown', toggles.save.obj, function () {
+                        saveGrid();
+                    });
+                }
 
                 menuList.appendChild(menuItems);
 
@@ -660,7 +639,10 @@ var RulersGuides = function (evt, dragdrop, options) {
                     if (guidesCnt > 0) {
                         toggles.guides.obj.className = '';
                         toggles.clear.obj.className = '';
-                        toggles.save.obj.className = '';
+
+                        if (saveOpen) {
+                            toggles.save.obj.className = '';
+                        }
 
                         toggles.guides.txt.nodeValue = (guideStatus === 1)
                             ? 'Hide guides'
@@ -668,16 +650,21 @@ var RulersGuides = function (evt, dragdrop, options) {
                     } else {
                         toggles.guides.obj.className = 'disabled';
                         toggles.clear.obj.className = 'disabled';
-                        toggles.save.obj.className = 'disabled';
+
+                        if (saveOpen) {
+                            toggles.save.obj.className = 'disabled';
+                        }
                     }
 
                     toggles.all.txt.nodeValue = (rulerStatus === 1 || guideStatus === 1)
                         ? 'Hide all'
                         : 'Show all';
 
-                    toggles.lock.txt.nodeValue = (locked === 0) ? 'Lock rulers' : 'Unlock rulers';
                     toggles.details.txt.nodeValue = (detailsStatus === 0) ? 'Show detailed info' : 'Hide detailed info';
-                    toggles.open.obj.className = (gridListLen > 0) ? '' : 'disabled';
+
+                    if (saveOpen) {
+                        toggles.open.obj.className = (gridListLen > 0) ? '' : 'disabled';
+                    }
 
                     menuList.style.display = (status === 0) ? 'inline-block' : 'none';
 
@@ -882,10 +869,9 @@ var RulersGuides = function (evt, dragdrop, options) {
                 toggleRulers();
                 break;
             case 79:
-                openGridDialog.open();
-                break;
-            case 76:
-                toggleRulersLock();
+                if (saveOpen) {
+                    openGridDialog.open();
+                }
                 break;
             case 73:
                 detailsStatus = 1 - detailsStatus;
