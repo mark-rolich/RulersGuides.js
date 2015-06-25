@@ -14,8 +14,8 @@
     "photoshop"
   ],
   "dependencies": {
-    "Event.js": "https://github.com/mark-rolich/Event.js",
-    "Dragdrop.js": "https://github.com/mark-rolich/Dragdrop.js"
+    "Event.js": "https://github.com/mark-rolich/Event.js.git",
+    "Dragdrop.js": "https://github.com/mark-rolich/Dragdrop.js.git"
   },
   "license": "MIT",
   "ignore": [
