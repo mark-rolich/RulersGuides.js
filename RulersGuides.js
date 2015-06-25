@@ -44,6 +44,7 @@ var RulersGuides = function (evt, dragdrop, options) {
         saveOpenOptionEnable:   false,
         detailsOptionEnable:    false,
         optionsMenuEnable:      true,
+        autoResizeOnScale:      true,
         rulerMilestoneStep:     50,
         rulerMajorStep:         10,
         pixelToUnitScale:       1
@@ -79,6 +80,7 @@ var RulersGuides = function (evt, dragdrop, options) {
         majorStep           = (options.rulerMajorStep !== undefined) ? options.rulerMajorStep: 10,
         scaleValue          = (options.pixelToUnitScale !== undefined) ? options.pixelToUnitScale: 1,
         menuEnable          = (options.optionsMenuEnable !== undefined) ? options.optionsMenuEnable: true,
+        autoResize          = (options.autoResizeOnScale !== undefined) ? options.autoResizeOnScale: true,
         Ruler               = function (type, size) {
             var ruler       = document.createElement('div'),
                 i           = 0,
@@ -749,6 +751,22 @@ var RulersGuides = function (evt, dragdrop, options) {
         this.status = 1;
     };
 
+    this.changeRulersScale = function(newScale) {
+        var size = getWindowSize();
+        deleteGuides();
+
+        wrapper.removeChild(vRuler);
+        wrapper.removeChild(hRuler);
+
+        scaleValue = newScale;
+
+        hRuler = new Ruler('h', size[0]);
+        vRuler = new Ruler('v', size[1]);
+
+        wrapper.appendChild(hRuler);
+        wrapper.appendChild(vRuler);
+    };
+
     evt.attach('mousedown', document, function (e, src) {
         var x               = e.clientX,
             y               = e.clientY,
@@ -905,16 +923,18 @@ var RulersGuides = function (evt, dragdrop, options) {
         }
     });
 
-    evt.attach('resize', window, function () {
-        var size = getWindowSize();
+    if(autoResize) {
+        evt.attach('resize', window, function () {
+            var size = getWindowSize();
 
-        wrapper.removeChild(vRuler);
-        wrapper.removeChild(hRuler);
+            wrapper.removeChild(vRuler);
+            wrapper.removeChild(hRuler);
 
-        hRuler = new Ruler('h', size[0]);
-        vRuler = new Ruler('v', size[1]);
+            hRuler = new Ruler('h', size[0]);
+            vRuler = new Ruler('v', size[1]);
 
-        wrapper.appendChild(hRuler);
-        wrapper.appendChild(vRuler);
-    });
+            wrapper.appendChild(hRuler);
+            wrapper.appendChild(vRuler);
+        });
+    }
 };
