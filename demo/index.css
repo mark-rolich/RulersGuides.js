@@ -1,61 +1,8 @@
-body.demo {
-    padding-top: 28px;
-    font: 18px Arial
-}
-
-.main-wrapper {
-    width: 900px;
-    margin: 0 auto;
-    color: #555
-}
-
-em {
-    font-weight: bold;
-    font-style: normal;
-    color: #4183C4
-}
-
-ul {
-    font-size: 20px;
-    float: left;
-    display: block;
-    margin: 0 0 25px 25px;
-    padding: 0;
-    list-style: none
-}
-
-ul li {
-    padding: 10px 0;
-}
-
-ul span {
-    display: inline-block
-}
-
-ul.list1 span {
-    width: 250px
-}
-
-ul.list2 {
-    margin-left: 80px
-}
-
-ul.list2 span {
-    display: inline-block;
-    width: 185px
-}
-
-kbd {
-    display: inline-block;
-    border: solid 1px #ccc;
-    padding: 0;
-    font: 20px Arial;
-    padding: 3px 7px;
-    background-color: #eee;
-    border-radius: 5px;
-    box-shadow: 1px 2px 2px #ddd
-}
-
-a {
-    color: red
+.box {
+    width: 400px;
+    height: 571px;
+    background-color: #3b94ec;
+    position: absolute;
+    left: calc(50% - 200px);
+    top: calc(50% - 285px);
 }

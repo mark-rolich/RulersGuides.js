@@ -24,21 +24,11 @@ It is possible to open/save created guides as grids
 <img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/save_grid.png" />&nbsp;
 <img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/open_grid.png" />
 
-Rulers can be unlocked, so that one of the rulers will scroll along the page and the other will be always visible.
-
-<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/unlock.png" />
-
-Guides can be snapped to defined number of pixels.
-
-<img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/snap_to.png" />
-
 Detailed info mode is available, which shows position and size of regions created by the guides.
 Works on guide position change too.
 
 <img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/detailed_info1.png" />
 <img src="http://mark-rolich.github.io/RulersGuides.js/screenshots/detailed_info2.png" />
-
-Guides can be snapped to DOM elements (experimental, use with caution, can be slow or unresponsive on complex pages with lots of elements).
 
 Following hotkeys are available:
 
@@ -48,10 +38,7 @@ Following hotkeys are available:
 * Clear all guides - `Ctrl + Alt + D`
 * Save grid dialog - `Ctrl + Alt + S`
 * Open grid dialog - `Ctrl + Alt + O`
-* Lock/unlock rulers - `Ctrl + Alt + L`
-* Open Snap to dialog - `Ctrl + Alt + C`
 * Toggle detailed info - `Ctrl + Alt + I`
-* Toggle snap to DOM - `Ctrl + Alt + E`
 
 Look-and-feel can be adjusted using CSS.
 
@@ -91,14 +78,14 @@ Bug tracker
 
 Have a bug? Please create an issue here on GitHub!
 
-https://github.com/mark-rolich/RulersGuides.js/issues
+https://github.com/alanmastro/RulersGuides.js/issues
 
 Copyright and License
 ---------------------
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Mark Rolich
+Copyright (c) 2015 Marco Bicchi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

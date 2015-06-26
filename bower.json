@@ -1,0 +1,28 @@
+{
+  "name": "RulersGuides.js",
+  "main": "RulersGuides.js",
+  "version": "0.8.0",
+  "homepage": "https://github.com/alanmastro/RulersGuides.js",
+  "authors": [
+    "Marco Bicchi <marco@join-italia.com>"
+  ],
+  "description": "Creates Photoshop-like guides and rulers interface on a web page",
+  "keywords": [
+    "rulers",
+    "guides",
+    "lines",
+    "photoshop"
+  ],
+  "dependencies": {
+    "Event.js": "https://github.com/mark-rolich/Event.js.git",
+    "Dragdrop.js": "https://github.com/mark-rolich/Dragdrop.js.git"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
