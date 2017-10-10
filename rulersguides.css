@@ -26,6 +26,7 @@ html,body {
 }
 
 .guide.h {
+    position: fixed;
     width: 3000px;
     height: 1px;
     border-bottom: solid 1px #00f;
